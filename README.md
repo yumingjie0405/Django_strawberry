@@ -28,11 +28,14 @@
     * 'Strawberry_Leaf_Spot',
     * 'Strawberry_Powdery_Mildew_Fruit',
     * 'Strawberry_Powdery_Mildew_Leaf',
-    * 'Tomato_Blight', 'Tomato_Leaf_Mold',
+    * 'Tomato_Blight', 
+    * 'Tomato_Leaf_Mold',
     * 'Tomato_Spider_Mites'
   * 数据集展示
-
-    ![doc](doc/doc.png)
+    ![doc](./doc/doc.png)
+  * 工作流程：
+    * 输入图像被转换为 float32 类型的 NumPy 数组并传递给 YOLOv8 对象检测模型。
+该模型对图像执行对象检测，并生成一个 JSON 对象，其中包含所有对象的名称及其在图像中各自的置信度。
 * **农户问答**
 * **农作物价格预测**
   * 功能：空气湿度、土壤湿度、土壤酸度和降雨量预测符符合合适的作物及其价格。

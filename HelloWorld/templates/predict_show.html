@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YOLOv8 草莓农残识别</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>YOLOv8 草莓农残识别</h2>
+    <hr>
+    <form method="post" enctype="multipart/form-data" id="image-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="image">选择图片:</label>
+            <input type="file" class="form-control-file" id="image" name="image">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="predict-btn">Predict</button>
+        </div>
+    </form>
+    <hr>
+    <div id="result-container" style="display: none;">
+        <h4>预测 Results:</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>病害种类</th>
+                <th>置信度</th>
+                <th>Bounding Box</th>
+            </tr>
+            </thead>
+            <tbody id="result-table">
+            </tbody>
+        </table>
+        <h4>Prediction Image:</h4>
+        <img id="predict-img" src="" style="max-width:100%">
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#image-form').on('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData($(this)[0]);
+            $.ajax({
+                url: "/predict/",
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    var results = response.class;
+                    var resultTable = '';
+
+                    for (var i = 0; i < results.length; i++) {
+                        class_names = {
+                            0: 'Beans_Angular_LeafSpot',
+                            1: 'Beans_Rust',
+                            2: 'Strawberry_Angular_LeafSpot',
+                            3: 'Strawberry_Anthracnose_Fruit_Rot',
+                            4: 'Strawberry_Blossom_Blight',
+                            5: 'Strawberry_Gray_Mold',
+                            6: 'Strawberry_Leaf_Spot',
+                            7: 'Strawberry_Powdery_Mildew_Fruit',
+                            8: 'Strawberry_Powdery_Mildew_Leaf',
+                            9: 'Tomato_Blight',
+                            10: 'Tomato_Leaf_Mold',
+                            11: 'Tomato_Spider_Mites'
+                        }
+                        var className = class_names[results[i]];
+                        var confidence = response.confidence[i].toFixed(2);
+                        var bbox = response.bbox[i];
+                        var bboxString = '(' + bbox[0].toFixed(2) + ', ' + bbox[1].toFixed(2) + ', ' + bbox[2].toFixed(2) + ', ' + bbox[3].toFixed(2) + ')';
+                        resultTable += '<tr><td>' + className + '</td><td>' + confidence + '</td><td>' + bboxString + '</td></tr>';
+                    }
+                    $('#result-table').html(resultTable);
+                    $('#predict-img').attr('src', 'data:image/png;base64,' + response.result_image_base64);
+                    $('#result-container').show();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
