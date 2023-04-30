@@ -1,12 +1,21 @@
 import base64
 import os
+from io import BytesIO
+
 import cv2
 import numpy as np
 from django.shortcuts import render, redirect
+from matplotlib import pyplot as plt
+
 from HelloWorld.models import Userinfo
 from django.http import JsonResponse
 from django_Crop import settings
 from ultralytics import YOLO
+from pyecharts import options as opts
+from pyecharts.charts import Line
+from datetime import datetime
+from django.db import connection
+from sklearn.preprocessing import MinMaxScaler
 
 
 # Create your views here.
@@ -39,7 +48,6 @@ def contact(request):
 
 
 # TODO 使用yolov8 + tensorrt 推理
-
 def predict(request):
     if request.method == 'POST' and request.FILES['image']:
         # 获取上传的图像
@@ -59,10 +67,8 @@ def predict(request):
             'image_base64': cv2_to_base64(image),
             'result_image_base64': cv2_to_base64(results['img']),
         }
-
         # 返回结果
         return JsonResponse(response_data)
-
     # 显示上传表单
     return render(request, 'predict_show.html')
 
@@ -79,6 +85,56 @@ def result(request):
     result = predict()
     print(result)
     return render(request, 'result_img.html', {"data": result})
+
+
+'''
+1、使用 Django 的数据库 API 从数据库中获取苹果价格数据。
+2、将数据处理为 Pyecharts 绘制折线图所需要的格式，即将日期转换为 datetime 类型。
+3、使用 Pyecharts 绘制折线图，其中包括两条折线，一条代表最低价，一条代表最高价。
+4、设置图表的全局选项，包括标题、X 轴和 Y 轴标签、提示框等。
+5、将图表渲染到 HTML 模板中
+'''
+
+
+def show_data(request):
+    # 从数据库中获取数据
+    cursor = connection.cursor()
+    cursor.execute("SELECT date, price_min, price_max FROM apple_prices")
+    data = cursor.fetchall()
+    cursor.close()
+
+    # 将数据处理为 Pyecharts 需要的格式
+    x_data = [datetime.strptime(str(d[0]), '%Y-%m-%d') for d in data]
+    y_data_min = [d[1] for d in data]
+    y_data_max = [d[2] for d in data]
+
+    # 绘制折线图
+    line = (
+        Line()
+        .add_xaxis(xaxis_data=x_data)
+        .add_yaxis(
+            series_name="最低价",
+            y_axis=y_data_min,
+            linestyle_opts=opts.LineStyleOpts(width=2),
+            itemstyle_opts=opts.ItemStyleOpts(color="#FF8C00"),
+        )
+        .add_yaxis(
+            series_name="最高价",
+            y_axis=y_data_max,
+            linestyle_opts=opts.LineStyleOpts(width=2),
+            itemstyle_opts=opts.ItemStyleOpts(color="#87CEEB"),
+        )
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title="价格走势图"),
+            xaxis_opts=opts.AxisOpts(type_="time", name="日期"),
+            yaxis_opts=opts.AxisOpts(name="价格"),
+            tooltip_opts=opts.TooltipOpts(trigger="axis"),
+        )
+    )
+
+    # 将图表渲染到 HTML 模板
+    context = {"line": line.render_embed()}
+    return render(request, "price_echarts.html", context)
 
 
 '''

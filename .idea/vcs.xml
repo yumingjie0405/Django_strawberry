@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/demo/Agriculture-Crop-Recommendation-System" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/demo/CSE523-Machine-Learning-Data-Pirates" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/demo/pigpriceML" vcs="Git" />
   </component>
 </project>

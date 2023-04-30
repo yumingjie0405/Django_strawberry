@@ -30,7 +30,5 @@ urlpatterns = [
     # 问答板块
     path('NLP/', views.show_NLP_predict),
     # 价格预测板块
-    path('Price/', views.show_price_predict),
-    # 展示视觉预测结果
-    path('result/', views.result),
+    path('Price/', views.show_data,name='index'),
 ]
