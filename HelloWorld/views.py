@@ -3,7 +3,7 @@ import os
 import cv2
 import numpy as np
 from django.shortcuts import render, redirect
-from HelloWorld.models import Userinfo, IMG
+from HelloWorld.models import Userinfo
 from django.http import JsonResponse
 from django_Crop import settings
 from ultralytics import YOLO
@@ -37,22 +37,6 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
-
-# # @csrf_exempt
-# def show_vision_predict(request):
-#     media_path = os.path.join(settings.MEDIA_ROOT, 'img')
-#     print(media_path)
-#     for file in os.listdir(media_path):
-#         targetFile = os.path.join(media_path, file)
-#         if os.path.isfile(targetFile):
-#             os.remove(targetFile)
-#     if request.method == 'POST':
-#         new_img = IMG(
-#             img=request.FILES.get('img'),
-#             name=request.FILES.get('img').name
-#         )
-#         new_img.save()
-#     return render(request, 'Vision_predict.html')
 
 # TODO 使用yolov8 + tensorrt 推理
 
@@ -107,7 +91,9 @@ import numpy as np
 
 def your_yolov5_model(image):
     # 加载模型
-    model = YOLO('../media/model/best.pt')
+    # model = YOLO('../media/model/best.pt')
+    # rtain16 中文显示预测结果
+    model = YOLO('../media/model/train16/weights/best.pt')
     results = model(image)
     boxes = results[0].boxes
     bbox = boxes.xywh

@@ -5,7 +5,8 @@ from ultralytics import YOLO
 def your_yolov5_model(image):
     # 加载模型
     # model = torch.hub.load('ultralytics/yolov5', 'custom', path='yolov5s.pt')
-    model = YOLO('../media/model/best.pt')
+    model = YOLO('../media/model/train16/weights/best.pt')
+    # model = YOLO('../media/model/best.pt')
     results = model(image)
     boxes = results[0].boxes
     bbox = boxes.xywh.tolist()
