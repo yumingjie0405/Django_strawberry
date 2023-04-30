@@ -1,10 +1,10 @@
 import os
-
 from django.shortcuts import render, redirect
 from HelloWorld.models import Userinfo, IMG
 from HelloWorld.predict_img import predict
 from django_Crop import settings
 from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 def login(request):
@@ -34,6 +34,7 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
+
 @csrf_exempt
 def show_vision_predict(request):
     media_path = os.path.join(settings.MEDIA_ROOT, 'img')
@@ -48,7 +49,6 @@ def show_vision_predict(request):
             name=request.FILES.get('img').name
         )
         new_img.save()
-        #print("  here " + new_img)
     return render(request, 'Vision_predict.html')
 
 
