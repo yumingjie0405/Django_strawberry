@@ -1,0 +1,30 @@
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center mb-5">问题与回答</h1>
+
+    <form method="post" class="d-flex justify-content-center mb-5">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="disease" class="sr-only">输入病害名称：</label>
+        <input type="text" id="disease" name="disease" class="form-control form-control-lg" placeholder="输入病害名称">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg ml-3">提交</button>
+    </form>
+
+    {% if error_msg %}
+      <div class="alert alert-danger text-center">{{ error_msg }}</div>
+    {% elif disease_info %}
+      <div class="card mb-3 mx-auto" style="max-width: 800px;">
+        <div class="card-body">
+          <h2 class="card-title">{{ disease_info.name }}</h2>
+          <p class="card-text"><strong>常用名称：</strong> {{ disease_info.comname }}</p>
+          <p class="card-text"><strong>症状：</strong> {{ disease_info.symptoms }}</p>
+          <p class="card-text"><strong>性质：</strong> {{ disease_info.nature }}</p>
+          <p class="card-text"><strong>基本描述：</strong> {{ disease_info.basicdesc }}</p>
+          <p class="card-text"><strong>详细描述：</strong> {{ disease_info.detailsdesc }}</p>
+          <p class="card-text"><strong>防治方法：</strong> {{ disease_info.dmethods }}</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -9,7 +9,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = 'chat_group'
 
         # 加载openai api key
-        openai.api_key = "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"
+        openai.api_key = "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"
 
         # 加入聊天室
         await self.channel_layer.group_add(

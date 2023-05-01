@@ -22,3 +22,23 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.text
+
+
+from django.db import models
+
+class DiseasesPests(models.Model):
+    did = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=20, null=True)
+    comname = models.CharField(max_length=20, null=True)
+    symptoms = models.CharField(max_length=100, null=True)
+    nature = models.CharField(max_length=20, null=True)
+    basicdesc = models.CharField(max_length=100, null=True)
+    detailsdesc = models.CharField(max_length=500, null=True)
+    score = models.CharField(max_length=20, null=True)
+    dmethods = models.CharField(max_length=500, null=True)
+
+    def __str__(self):
+        return self.did
+
+    class Meta:
+        db_table = "diseasespests"

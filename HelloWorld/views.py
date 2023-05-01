@@ -3,7 +3,7 @@ import cv2
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 
-from HelloWorld.models import Userinfo
+from HelloWorld.models import Userinfo, DiseasesPests
 from django.http import JsonResponse
 from ultralytics import YOLO
 from pyecharts import options as opts
@@ -69,7 +69,6 @@ def predict(request):
 
 # def show_NLP_predict(request):
 #     return render(request, 'NLP_predict.html')
-
 
 
 class ChatView(TemplateView):
@@ -145,11 +144,21 @@ def show_data(request):
     return render(request, "price_echarts.html", context)
 
 
+def QA(request):
+    if request.method == 'POST':
+        disease_name = request.POST['disease']
+        try:
+            disease_info = DiseasesPests.objects.get(name=disease_name)
+        except DiseasesPests.DoesNotExist:
+            error_msg = f"No information found for '{disease_name}'"
+            return render(request, 'qa.html', {'error_msg': error_msg})
+        return render(request, 'qa.html', {'disease_info': disease_info})
+    return render(request, 'qa.html')
+
+
 '''
 tool
 '''
-
-import torch
 import numpy as np
 
 
