@@ -1,5 +1,4 @@
-<img src="/doc/1.jpg">
-
+****
 # 安徽信息工程学院大三下实践项目
 
 欢迎:star:🥰
@@ -26,9 +25,10 @@
 
 #### 使用模型：
 
-- yolov8
-
-
+- yolov8s 
+![map](doc/map.png)
+![loss](doc/train_loss.png)
+![result](doc/train_batch2.jpg)
 * 识别种类：
 
   * 'Beans_Angular_LeafSpot',
