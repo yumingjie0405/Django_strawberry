@@ -16,19 +16,29 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from HelloWorld import views
+from HelloWorld import views, consumers
+from HelloWorld.routing import websocket_urlpatterns
 
 urlpatterns = [
     path('sign_in/', views.login),
-    path('overview/', views.overview),
+    path('', views.overview),
     path('homepage/', views.homepage),
     path('about/', views.about),
     path('contact/', views.contact),
     # 视觉识别板块
     # path('Vision/', views.show_vision_predict),
     path('predict/', views.predict, name='predict'),
-    # 问答板块
-    path('NLP/', views.show_NLP_predict),
+
     # 价格预测板块
-    path('Price/', views.show_data,name='index'),
+    path('Price/', views.show_data, name='index'),
+
+    # 问答板块
+    path('NLP/', views.ChatView.as_view(), name='nlp'),
+
+    # 添加 WebSocket URL 模式
+    path('ws/chat/', consumers.ChatConsumer.as_asgi())
+
 ]
+
+# 添加 WebSocket URL 模式
+urlpatterns += websocket_urlpatterns

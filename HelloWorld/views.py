@@ -1,21 +1,15 @@
 import base64
-import os
-from io import BytesIO
-
 import cv2
-import numpy as np
 from django.shortcuts import render, redirect
-from matplotlib import pyplot as plt
+from django.views.generic import TemplateView
 
 from HelloWorld.models import Userinfo
 from django.http import JsonResponse
-from django_Crop import settings
 from ultralytics import YOLO
 from pyecharts import options as opts
 from pyecharts.charts import Line
 from datetime import datetime
 from django.db import connection
-from sklearn.preprocessing import MinMaxScaler
 
 
 # Create your views here.
@@ -73,8 +67,22 @@ def predict(request):
     return render(request, 'predict_show.html')
 
 
-def show_NLP_predict(request):
-    return render(request, 'NLP_predict.html')
+# def show_NLP_predict(request):
+#     return render(request, 'NLP_predict.html')
+
+
+
+class ChatView(TemplateView):
+    template_name = "NLP_predict.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['websocket_url'] = "ws://" + self.request.get_host() + "/ws/chat/"
+        return context
+
+
+'''
+'''
 
 
 def show_price_predict(request):

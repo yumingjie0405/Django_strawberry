@@ -1,10 +1,106 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Chat with ChatGPT</title>#}
+{#</head>#}
+{#<body>#}
+{#<h1>Chat with ChatGPT</h1>#}
+{#<div id="messages"></div>#}
+{#<input id="message-input" type="text">#}
+{#<button id="send-button">Send</button>#}
+{##}
+{#<script>#}
+{#    const socket = new WebSocket('ws://' + window.location.host + '/ws/chat/');#}
+{#    const messageInput = document.getElementById('message-input');#}
+{#    const sendButton = document.getElementById('send-button');#}
+{#    const messagesDiv = document.getElementById('messages');#}
+{##}
+{#    // 连接成功后，发送“Hello, ChatGPT！”到服务器#}
+{#    socket.onopen = () => {#}
+{#        socket.send(JSON.stringify({#}
+{#            'message': 'Hello, ChatGPT!'#}
+{#        }));#}
+{#    };#}
+{##}
+{#    // 接收服务器发送的消息并在聊天界面中显示#}
+{#    socket.onmessage = (event) => {#}
+{#        const message = JSON.parse(event.data)['message'];#}
+{#        messagesDiv.innerHTML += '<p>' + message + '</p>';#}
+{#    };#}
+{##}
+{#    // 发送用户输入的消息到服务器#}
+{#    sendButton.onclick = () => {#}
+{#        const message = messageInput.value;#}
+{#        socket.send(JSON.stringify({#}
+{#            'message': message#}
+{#        }));#}
+{#        messagesDiv.innerHTML += '<p><strong>You:</strong> ' + message + '</p>';#}
+{#        messageInput.value = '';#}
+{#    };#}
+{#</script>#}
+{#</body>#}
+{#</html>#}
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="utf-8">
+  <title>WebSocket Chat</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    #messages {
+      margin-bottom: 10px;
+    }
+    #message-form {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    #message-form input[type="text"] {
+      flex: 1;
+      margin-right: 10px;
+    }
+    #message-form button[type="submit"] {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
+  <h1>WebSocket Chat</h1>
+  <div id="messages"></div>
+  <form id="message-form">
+    <input type="text" id="message-input" placeholder="Type a message...">
+    <button type="submit">Send</button>
+  </form>
 
+  <script>
+    const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+
+    chatSocket.onmessage = function(e) {
+      const message = JSON.parse(e.data).message;
+      const messagesDiv = document.querySelector('#messages');
+      const messageElement = document.createElement('div');
+      messageElement.innerText = message;
+      messagesDiv.append(messageElement);
+    };
+
+    document.querySelector('#message-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const messageInputDom = document.querySelector('#message-input');
+      const message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({'message': message}));
+      messageInputDom.value = '';
+    });
+  </script>
 </body>
 </html>

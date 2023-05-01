@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'HelloWorld',
+    'channels',
 ]
+
+ASGI_APPLICATION = 'HelloWorld.routing.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +71,15 @@ TEMPLATES = [
         },
     },
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "CONFIG": {
+            "capacity": 1000,
+        },
+    },
+}
 
 WSGI_APPLICATION = 'django_Crop.wsgi.application'
 
