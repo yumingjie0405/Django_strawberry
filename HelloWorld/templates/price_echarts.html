@@ -70,3 +70,21 @@
 </div>
 <br>
 <br>
+<button id="predict-button">预测</button>
+<script>
+    const predictButton = document.getElementById('predict-button');
+    predictButton.addEventListener('click', () => {
+        fetch('/Price')
+            .then(response => response.json())
+            .then(data => {
+                const lineChart = echarts.init(document.getElementById('line-chart'));
+                lineChart.setOption({
+                    series: data.line.option.series,
+                });
+            })
+            .catch(error => {
+                console.error('预测出错', error);
+            });
+    });
+
+</script>

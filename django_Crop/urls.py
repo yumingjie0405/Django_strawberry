@@ -31,7 +31,7 @@ urlpatterns = [
 
     # 价格预测板块
     path('Price/', views.show_data, name='index'),
-
+    # path('predict_price/',views.predict_price),
     # 问答板块 TODO chatgpt 但是限额
     path('NLP/', views.ChatView.as_view(), name='nlp'),
 

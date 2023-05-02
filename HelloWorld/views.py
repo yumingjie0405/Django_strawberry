@@ -1,8 +1,14 @@
 import base64
 import cv2
+import pandas as pd
+import torch
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from matplotlib import pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from torch import nn
 
+from HelloWorld.LSTM import LSTMPredictor
 from HelloWorld.models import Userinfo, DiseasesPests
 from django.http import JsonResponse
 from ultralytics import YOLO
@@ -115,6 +121,76 @@ def show_data(request):
     y_data_min = [d[1] for d in data]
     y_data_max = [d[2] for d in data]
 
+    # 构建LSTM数据
+    df = pd.DataFrame(data, columns=['date', 'price_min', 'price_max'])
+    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
+    print(df.head())
+    df['price_avg'] = (df['price_min'] + df['price_max']) / 2
+    df = df[['price_avg']]
+    # 归一化处理
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    df_scaled = scaler.fit_transform(df)
+
+    # 序列化处理
+    n_steps = 3  # 每组输入数据包含几个时间步长的数据
+    X = []
+    y = []
+    for i in range(n_steps, len(df_scaled)):
+        X.append(df_scaled[i - n_steps:i, 0])
+        y.append(df_scaled[i, 0])
+    X, y = np.array(X), np.array(y)
+    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
+
+    # 划分训练集和测试集
+    train_size = int(len(X) * 0.7)
+    X_train, X_test = X[:train_size], X[train_size:]
+    y_train, y_test = y[:train_size], y[train_size:]
+
+    model = LSTMPredictor(input_size=1, hidden_size=50, num_layers=2, output_size=1)
+
+    # 定义优化器和损失函数
+    criterion = nn.MSELoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+    # 训练模型
+    train_losses = []
+    num_epochs = 100
+    for epoch in range(num_epochs):
+        inputs = torch.from_numpy(X_train).float()
+        targets = torch.from_numpy(y_train).float()
+        # 前向传播
+        outputs = model(inputs)
+        loss = criterion(outputs, targets)
+        # 反向传播和优化
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        train_losses.append(loss.item())
+        if (epoch + 1) % 10 == 0:
+            print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}')
+
+    # 在测试集上预测
+    with torch.no_grad():
+        inputs = torch.from_numpy(X_test).float()
+        targets = torch.from_numpy(y_test).float()
+        outputs = model(inputs)
+        loss = criterion(outputs, targets)
+        print(f'Test Loss: {loss.item():.4f}')
+        outputs = outputs.detach().numpy()
+
+    # 反归一化处理
+    y_pred = scaler.inverse_transform(outputs)
+    y_test = scaler.inverse_transform([y_test])
+
+    rmse = np.sqrt(np.mean((y_pred - y_test) ** 2))
+    print(f'RMSE: {rmse}')
+
+    # plt.plot(range(1, num_epochs + 1), train_losses, label='Training Loss')
+    # plt.title('Training Loss')
+    # plt.xlabel('Epoch')
+    # plt.ylabel('Loss')
+    # plt.legend()
+    # plt.show()
     # 绘制折线图
     line = (
         Line()
@@ -130,6 +206,12 @@ def show_data(request):
             y_axis=y_data_max,
             linestyle_opts=opts.LineStyleOpts(width=2),
             itemstyle_opts=opts.ItemStyleOpts(color="#87CEEB"),
+        )
+        .add_yaxis(
+            series_name="预测结果",
+            y_axis=y_pred.tolist(),
+            linestyle_opts=opts.LineStyleOpts(width=2),
+            itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
         )
         .set_global_opts(
             title_opts=opts.TitleOpts(title="价格走势图"),
