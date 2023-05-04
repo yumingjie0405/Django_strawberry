@@ -1,7 +1,7 @@
 import openai
 
 # 填你的秘钥
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 # 提问代码

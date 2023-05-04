@@ -70,11 +70,20 @@
 </div>
 <br>
 <br>
-<button id="predict-button">预测</button>
+<!-- 在HTML中添加一个按钮，点击按钮开始触发预测 -->
+<button id="predict-btn">开始预测</button>
 <script>
-    const predictButton = document.getElementById('predict-button');
+    const predictButton = document.getElementById('predict-btn');
     predictButton.addEventListener('click', () => {
-        fetch('/Price')
+        fetch('/Price', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                // 发送数据到后端
+            })
+        })
             .then(response => response.json())
             .then(data => {
                 const lineChart = echarts.init(document.getElementById('line-chart'));

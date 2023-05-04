@@ -12,6 +12,8 @@ DAYS_FOR_TRAIN = 10
 '''
 生成未来时间段内的输入序列
 '''
+
+
 def create_future_input_sequence(dataset, days_for_train, days_for_predict):
     input_sequence = []
     start_index = len(dataset) - days_for_train
@@ -158,9 +160,12 @@ pred_test = model(dataset_x)  # 全量训练集
 pred_test = pred_test.view(-1).data.numpy()
 pred_test = np.concatenate((np.zeros(DAYS_FOR_TRAIN), pred_test))  # 填充0 使长度相同
 assert len(pred_test) == len(df_scaled)
-
-plt.plot(pred_test, 'r', label='prediction')
-plt.plot(df_scaled, 'b', label='real')
+pred_test_scaled = pred_test.reshape(-1, 1)  # 转换为列向量
+pred_test_unscaled = scaler.inverse_transform(pred_test_scaled).flatten()  # 反归一化
+df_unscaled =  scaler.inverse_transform(df_scaled).flatten()
+print(pred_test_unscaled)
+plt.plot(pred_test_unscaled, 'r', label='prediction')
+# plt.plot(df_unscaled, 'b', label='real')
 plt.plot((train_size, train_size), (0, 1), 'g--')  # 分割线 左边是训练数据 右边是测试数据的输出
 plt.legend(loc='best')
 

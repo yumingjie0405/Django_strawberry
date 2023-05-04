@@ -31,8 +31,8 @@ y_data_max = [d[2] for d in data]
 df = pd.DataFrame(data, columns=['date', 'price_min', 'price_max'])
 df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
 print(df.head())
-df['price_avg'] = (df['price_min'] + df['price_max']) / 2
-df = df[['price_avg']]
+# df['price_avg'] = (df['price_min'] + df['price_max']) / 2
+# df = df[['price_avg']]
 
 # 归一化处理
 scaler = MinMaxScaler(feature_range=(0, 1))
@@ -107,7 +107,7 @@ with torch.no_grad():
 # 反归一化处理
 y_pred = scaler.inverse_transform(outputs)
 y_test = scaler.inverse_transform([y_test])
-
+print(y_pred)
 rmse = np.sqrt(np.mean((y_pred - y_test) ** 2))
 print(f'RMSE: {rmse}')
 
