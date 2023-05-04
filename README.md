@@ -52,7 +52,7 @@ pytoch、Django、pymysql、~~openai~~...
 
 #### 使用模型：
 
-- yolov8s
+- yolov8s训练过程展示（16系列垃圾显卡，能用就行）
   ![map](doc/map.png)
 
 ![loss](doc/train_loss.png)
@@ -63,10 +63,17 @@ pytoch、Django、pymysql、~~openai~~...
 
 * 输入图像被转换为 float32 类型的 NumPy 数组并传递给 YOLOv8 对象检测模型。
   该模型对图像执行对象检测，并生成一个 JSON 对象，其中包含所有对象的名称及其在图像中各自的置信度。
+
 #### 效果展示：
+
 ![yolo](doc/yolo.png)
+
 ### **2、农户问答**
+
+#### 效果展示:
+
 ![chat](doc/chat.png)
+
 ### **3、农作物价格预测**
 
 * 功能：空气湿度、土壤湿度、土壤酸度和降雨量预测符符合合适的作物及其价格。
