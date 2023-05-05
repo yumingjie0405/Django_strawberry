@@ -276,34 +276,71 @@ def table(request):
 # 天气预报
 WEATHER_API_KEY = 'SPBVDFMMKeLXB2VYa'
 
+# def get_weather_data(city):
+#     url = f'https://api.seniverse.com/v3/weather/daily.json?key={WEATHER_API_KEY}&location={city}&language=zh-Hans&unit=c&start=0&days=14'
+#     response = requests.get(url)
+#     data = json.loads(response.content.decode())
+#     if data.get('results'):
+#         return data['results'][0]['daily']
+#     return []
+#
 
-def get_weather_data(city):
+
+import requests
+from django.shortcuts import render
+import json
+
+
+# 心知天气只能查看未来三天 淘汰
+def XINZHI_weather(request):
+    # 获取城市名称
+    city = request.GET.get('city', '芜湖')
+    # city = request.GET.get('city')
+
+    # 根据城市名称调用心知天气API获取数据
     url = f'https://api.seniverse.com/v3/weather/daily.json?key={WEATHER_API_KEY}&location={city}&language=zh-Hans&unit=c&start=0&days=14'
     response = requests.get(url)
     data = json.loads(response.content.decode())
-    if data.get('results'):
-        return data['results'][0]['daily']
-    return []
+
+    # 从返回数据中提取最高和最低温度
+    dates = []
+    high_temps = []
+    low_temps = []
+    for item in data['results'][0]['daily'][:14]:
+        dates.append(item['date'])
+        high_temps.append(item['high'])
+        low_temps.append(item['low'])
+
+    # 将数据传递给模板
+    context = {'city': city, 'dates': json.dumps(dates), 'high_temps': json.dumps(high_temps),
+               'low_temps': json.dumps(low_temps)}
+
+    return render(request, 'XINZHI_weather.html', context)
 
 
-def weather(request, city):
-    data = get_weather_data(city)
-    if not data:
-        return JsonResponse({'error': 'No data available'})
+# 和风天气
+def weather(request):
+    # 获取城市名称
 
-    dates = [d['date'] for d in data]
-    high_temps = [d['high'] for d in data]
-    low_temps = [d['low'] for d in data]
+    # 调用和风天气API获取数据
+    url = 'https://api.qweather.com/v7/weather/30d?location=101010100&key=f2d15caf06324b04b8d78388b0f5754f'
+    response = requests.get(url)
+    data = json.loads(response.content.decode())
 
-    # 创建折线图
-    line = Line()
-    line.add_xaxis(dates)
-    line.add_yaxis('最高气温', high_temps, is_smooth=True)
-    line.add_yaxis('最低气温', low_temps, is_smooth=True)
-    line.set_global_opts(title_opts={'text': f'{city}未来14天天气预报'})
+    # 从返回数据中提取最高和最低温度
+    dates = []
+    high_temps = []
+    low_temps = []
+    for item in data['daily'][:12]:
+        dates.append(item['fxDate'])
+        high_temps.append(item['tempMax'])
+        low_temps.append(item['tempMin'])
 
-    # 返回图表数据
-    return JsonResponse(json.loads(line.dump_options()), safe=False)
+    # 将数据传递给模板
+    context = { 'dates': json.dumps(dates), 'high_temps': json.dumps(high_temps),
+               'low_temps': json.dumps(low_temps)}
+
+    return render(request, 'weather.html', context)
 
 
 # 返回土壤信息
