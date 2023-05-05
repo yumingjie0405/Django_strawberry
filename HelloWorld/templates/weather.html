@@ -9,8 +9,6 @@
 <body>
   <div id="app">
     <h1>{{ city }}未来14天天气预报</h1>
-    <input v-model="city" type="text">
-    <button v-on:click="getWeatherData">查询</button>
     <div id="chart"></div>
   </div>
 
@@ -18,8 +16,11 @@
     var app = new Vue({
       el: '#app',
       data: {
-        city: '',
+        city: '城市名',
         chartData: {}
+      },
+      created: function () {
+        this.getWeatherData();
       },
       methods: {
         getWeatherData: function () {
