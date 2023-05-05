@@ -1,45 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>天气预报</title>
-  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <meta charset="UTF-8">
+    <title>天气信息</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.0.2/dist/echarts.min.js"></script>
 </head>
 <body>
-  <div id="app">
-    <h1>{{ city }}未来14天天气预报</h1>
-    <div id="chart"></div>
-  </div>
+    <div id="chart" style="width: 800px; height: 400px;"></div>
 
-  <script>
-    var app = new Vue({
-      el: '#app',
-      data: {
-        city: '城市名',
-        chartData: {}
-      },
-      created: function () {
-        this.getWeatherData();
-      },
-      methods: {
-        getWeatherData: function () {
-          var self = this;
-          axios.get('/weather/' + this.city)
-            .then(function (response) {
-              self.chartData = response.data;
-              self.renderChart();
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        },
-        renderChart: function () {
-          var myChart = echarts.init(document.getElementById('chart'));
-          myChart.setOption(this.chartData);
-        }
-      }
-    });
-  </script>
+    <script>
+        var chart = echarts.init(document.getElementById('chart'));
+
+        // 获取数据
+        var dates = JSON.parse('{{ dates|safe }}');
+        var high_temps = JSON.parse('{{ high_temps|safe }}');
+        var low_temps = JSON.parse('{{ low_temps|safe }}');
+
+        // 配置选项
+        var option = {
+            title: {
+                text: '未来14天天气趋势'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['最高温度','最低温度']
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: dates
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} °C'
+                }
+            },
+            series: [
+                {
+                    name:'最高温度',
+                    type:'line',
+                    data: high_temps,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    }
+                },
+                {
+                    name:'最低温度',
+                    type:'line',
+                    data: low_temps,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    }
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        chart.setOption(option);
+    </script>
 </body>
 </html>
