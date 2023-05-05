@@ -8,7 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 from torch import nn
 import json
 from HelloWorld.LSTM import LSTM_Regression
-from HelloWorld.models import Userinfo, DiseasesPests
+from HelloWorld.models import Userinfo, DiseasesPests, Admin
 from django.http import JsonResponse
 from ultralytics import YOLO
 from pyecharts import options as opts
@@ -22,13 +22,29 @@ import openai
 def login(request):
     if request.method == 'GET':
         return render(request, 'sign_in.html')
-    userinfo = Userinfo.objects.all()
-    for data_list in userinfo:
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        if username == data_list.name and password == data_list.password:
+    username = request.POST.get("username")
+    password = request.POST.get("password")
+    try:
+        admin = Admin.objects.filter(username=username).first()
+        if admin.password == password:
             return redirect('/overview/')
-        return render(request, 'sign_in.html', {'error': '用户名或密码错误'})
+    except Admin.DoesNotExist:
+        pass
+    return render(request, 'sign_in.html', {'error': '用户名或密码错误'})
+
+
+# 注册
+def register(request):
+    if request.method == 'GET':
+        return render(request, 'sign_up.html')
+
+    # 获取输入的数据
+    usn = request.POST.get("username")
+    psw = request.POST.get("password")
+    # 连接数据库
+    Admin.objects.create(username=usn, password=psw)
+    # 添加完成，返回给管理用户网页
+    return redirect('/sign_in/')
 
 
 # 主界面

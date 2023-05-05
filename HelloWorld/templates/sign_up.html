@@ -70,21 +70,19 @@
                     </button>
                     <span class="clearfix"></span>
                     <img src="../static/images/brand/icon.png" style="width: 50px;" alt="">
-                    <h4 class="heading h3 text-white pt-3 pb-5">欢迎回来,<br>
-                      登录你的账户.</h4>
-                    <form class="form-primary" method="post">
-                        {% csrf_token %}
-                      <div class="form-group">
-                        <input type="text" class="form-control"  placeholder="你的账号" name="username">
-                      </div>
-                      <div class="form-group">
-                        <input type="password" class="form-control"  placeholder="密码" name="password">
-                      </div>
-                      <div class="text-right mt-4"><a href="/sign_up/" class="text-white">注册</a></div>
-                      <button type="submit" class="btn btn-block btn-lg bg-white mt-4">登录</button>
-                        <span style="color: red">{{ error }}</span>
-                    </form>
-
+                    <h4 class="heading h3 text-white pt-3 pb-5">
+                      请注册你的账号.</h4>
+                <form class="form-primary" method="post">
+                    {% csrf_token %}
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="username" placeholder="你的账号" name="username">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="password" placeholder="密码" name="password">
+                  </div>
+                  <button id="sub" type="submit"  class="btn btn-block btn-lg bg-white mt-4" onclick="return test()">确认</button>
+                </form>
+                      <div><a href="/sign_in/" target="_self" class="btn btn-block btn-lg bg-white mt-4">退 出</a></div>
                   </div>
                 </div>
               </div>
@@ -93,6 +91,20 @@
         </div>
       </section>
     </main>
+    <script>
+    var username=document.getElementById('username');
+    var password=document.getElementById('password')
+    var btn=document.getElementById('sub');
+    console.log(username.value)
+   function test(){
+        if (username.value===''||password.value===''){
+        alert("用户名密码不可为空");
+        return false
+    }
+        return true
+
+   }
+    </script>
     <!-- Core -->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
     <script src="../static/vendor/popper/popper.min.js"></script>

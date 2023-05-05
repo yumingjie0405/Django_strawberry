@@ -2,6 +2,11 @@ from django.db import models
 
 
 # Create your models here.
+
+class Admin(models.Model):
+    username=models.CharField(verbose_name="姓名",max_length=16)
+    password=models.CharField(verbose_name="密码",max_length=64)
+
 class Userinfo(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=32)
