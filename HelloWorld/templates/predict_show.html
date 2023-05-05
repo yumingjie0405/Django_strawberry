@@ -58,18 +58,18 @@
 
                     for (var i = 0; i < results.length; i++) {
                         class_names = {
-                            0: 'Beans_Angular_LeafSpot',
-                            1: 'Beans_Rust',
-                            2: 'Strawberry_Angular_LeafSpot',
-                            3: 'Strawberry_Anthracnose_Fruit_Rot',
-                            4: 'Strawberry_Blossom_Blight',
-                            5: 'Strawberry_Gray_Mold',
-                            6: 'Strawberry_Leaf_Spot',
-                            7: 'Strawberry_Powdery_Mildew_Fruit',
-                            8: 'Strawberry_Powdery_Mildew_Leaf',
-                            9: 'Tomato_Blight',
-                            10: 'Tomato_Leaf_Mold',
-                            11: 'Tomato_Spider_Mites'
+                            0: '豆角角斑病',
+                            1: '豆角锈病',
+                            2: '草莓角斑病',
+                            3: '草莓炭疽病',
+                            4: '草莓花叶枯萎病',
+                            5: '草莓灰霉病',
+                            6: '草莓叶斑病',
+                            7: '草莓粉霉病（果实）',
+                            8: '草莓粉霉病（叶片）',
+                            9: '番茄晚疫病',
+                            10: '番茄叶',
+                            11: '番茄蜘蛛螨'
                         }
                         var className = class_names[results[i]];
                         var confidence = response.confidence[i].toFixed(2);

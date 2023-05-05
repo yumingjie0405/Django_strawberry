@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>天气预报</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>{{ city }}未来14天天气预报</h1>
+    <input v-model="city" type="text">
+    <button v-on:click="getWeatherData">查询</button>
+    <div id="chart"></div>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        city: '',
+        chartData: {}
+      },
+      methods: {
+        getWeatherData: function () {
+          var self = this;
+          axios.get('/weather/' + this.city)
+            .then(function (response) {
+              self.chartData = response.data;
+              self.renderChart();
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+        renderChart: function () {
+          var myChart = echarts.init(document.getElementById('chart'));
+          myChart.setOption(this.chartData);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

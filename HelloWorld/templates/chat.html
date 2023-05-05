@@ -7,11 +7,13 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
         }
+
         h1 {
             color: #007bff;
             text-align: center;
             margin-top: 50px;
         }
+
         form {
             width: 50%;
             margin: 0 auto;
@@ -20,12 +22,14 @@
             flex-direction: row;
             justify-content: center;
         }
+
         label {
             font-weight: bold;
             margin-right: 10px;
             font-size: 18px;
             line-height: 30px;
         }
+
         input[type="text"] {
             border: none;
             border-bottom: 2px solid #007bff;
@@ -34,6 +38,7 @@
             padding: 5px;
             width: 70%;
         }
+
         button[type="button"] {
             background-color: #007bff;
             color: #fff;
@@ -44,6 +49,7 @@
             line-height: 30px;
             cursor: pointer;
         }
+
         #response {
             margin-top: 50px;
             padding: 20px;
@@ -56,8 +62,8 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#submit').click(function() {
+        $(document).ready(function () {
+            $('#submit').click(function () {
                 var prompt = $('#prompt').val();
                 $.ajax({
                     type: 'POST',
@@ -66,10 +72,10 @@
                         'prompt': prompt,
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
-                    success: function(response) {
+                    success: function (response) {
                         $('#response').html('<p>' + response.response + '</p>');
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         alert(error);
                     }
                 });
@@ -78,12 +84,12 @@
     </script>
 </head>
 <body>
-    <h1>ChatGPT</h1>
-    <form>
-        <label for="prompt">输入问题：</label>
-        <input type="text" id="prompt" name="prompt">
-        <button type="button" id="submit">提交</button>
-    </form>
-    <div id="response"></div>
+<h1>ChatGPT</h1>
+<form>
+    <label for="prompt">输入问题：</label>
+    <input type="text" id="prompt" name="prompt">
+    <button type="button" id="submit">提交</button>
+</form>
+<div id="response"></div>
 </body>
 </html>

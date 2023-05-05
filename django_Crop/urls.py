@@ -30,16 +30,19 @@ urlpatterns = [
     path('predict/', views.predict, name='predict'),
 
     # 价格预测板块
-    path('Price/', views.show_data, name='index'),
+    path('Price/', views.show_data, name='Price'),
     # path('predict_price/',views.predict_price),
     # 问答板块 TODO chatgpt 但是限额
     path('NLP/', views.ChatView.as_view(), name='nlp'),
     path('chat/', views.chat),
     # 问答板块暂时由数据库查询凑合
     # path('QA/', views.QA),
-
     # 添加 WebSocket URL 模式
     # path('ws/chat/', consumers.ChatConsumer.as_asgi())
+    path('table/', views.table, name='table'),
+    path('weather/<str:city>', views.weather, name='weather'),
+    path('soil/', views.soil_info, name='soil'),
+    path('china_map/', views.country_map, name='china_map'),
 
 ]
 
