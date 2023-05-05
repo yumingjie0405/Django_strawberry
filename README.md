@@ -37,18 +37,18 @@ pytoch、Django、pymysql、~~openai~~...
 
 * 识别种类：
 
-    * 'Beans_Angular_LeafSpot',
-    * 'Beans_Rust',
-    * 'Strawberry_Angular_LeafSpot',
-    * 'Strawberry_Anthracnose_Fruit_Rot',
-    * 'Strawberry_Blossom_Blight',
-    * 'Strawberry_Gray_Mold',
-    * 'Strawberry_Leaf_Spot',
-    * 'Strawberry_Powdery_Mildew_Fruit',
-    * 'Strawberry_Powdery_Mildew_Leaf',
-    * 'Tomato_Blight',
-    * 'Tomato_Leaf_Mold',
-    * 'Tomato_Spider_Mites'
+                            0: '豆角角斑病',
+                            1: '豆角锈病',
+                            2: '草莓角斑病',
+                            3: '草莓炭疽病',
+                            4: '草莓花叶枯萎病',
+                            5: '草莓灰霉病',
+                            6: '草莓叶斑病',
+                            7: '草莓粉霉病（果实）',
+                            8: '草莓粉霉病（叶片）',
+                            9: '番茄晚疫病',
+                            10: '番茄叶',
+                            11: '番茄蜘蛛螨'
 
 #### 使用模型：
 

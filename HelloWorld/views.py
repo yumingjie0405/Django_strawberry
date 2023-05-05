@@ -1,7 +1,7 @@
 import base64
 import cv2
-import pandas as pd
 import torch
+import requests
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from sklearn.preprocessing import MinMaxScaler
@@ -18,7 +18,7 @@ from django.db import connection
 import openai
 
 
-# Create your views here.
+# 登陆
 def login(request):
     if request.method == 'GET':
         return render(request, 'sign_in.html')
@@ -31,6 +31,7 @@ def login(request):
         return render(request, 'sign_in.html', {'error': '用户名或密码错误'})
 
 
+# 主界面
 def overview(request):
     return render(request, 'overview.html')
 
@@ -47,6 +48,7 @@ def contact(request):
     return render(request, 'contact.html')
 
 
+# 病虫害视觉识别
 # TODO 使用yolov8 + tensorrt 推理
 def predict(request):
     if request.method == 'POST' and request.FILES['image']:
@@ -76,7 +78,7 @@ def predict(request):
 # def show_NLP_predict(request):
 #     return render(request, 'NLP_predict.html')
 
-
+# chatGPT主函数
 class ChatView(TemplateView):
     template_name = "NLP_predict.html"
 
@@ -115,7 +117,6 @@ def chat(request):
         return render(request, 'chat.html')
 
 
-
 '''
 '''
 
@@ -139,6 +140,7 @@ def result(request):
 '''
 
 
+# 经济预测
 def show_data(request):
     DAYS_FOR_TRAIN = 10
     # 从数据库中获取数据
@@ -151,72 +153,72 @@ def show_data(request):
     x_data = [datetime.strptime(str(d[0]), '%Y-%m-%d') for d in data]
     y_data_min = [d[1] for d in data]
     y_data_max = [d[2] for d in data]
-
-    # 构建LSTM数据
-    df = pd.DataFrame(data, columns=['date', 'price_min', 'price_max'])
-    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
-    print(df.head())
-    df['price_avg'] = (df['price_min'] + df['price_max']) / 2
-    df = df[['price_avg']]
-
-    # 归一化处理
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    df_scaled = scaler.fit_transform(df)
-
-    dataset_x, dataset_y = create_dataset(df_scaled, DAYS_FOR_TRAIN)
-    print(len(dataset_x))
-    print(len(dataset_y))
-    # 划分训练集和测试集，70%作为训练集
-    train_size = int(len(dataset_x) * 0.7)
-
-    train_x = dataset_x[:train_size]
-    train_y = dataset_y[:train_size]
-    # 将数据改变形状，RNN 读入的数据维度是 (seq_size, batch_size, feature_size)
-    train_x = train_x.reshape(-1, 1, DAYS_FOR_TRAIN)
-    train_y = train_y.reshape(-1, 1, 1)
-
-    # 转为pytorch的tensor对象
-    train_x = torch.from_numpy(train_x)
-    train_y = torch.from_numpy(train_y)
-    print(train_x.dtype)
-    model = LSTM_Regression(DAYS_FOR_TRAIN, 8, output_size=1, num_layers=2)  # 导入模型并设置模型的参数输入输出层、隐藏层等
-    model = model.double()
-    model_total = sum([param.nelement() for param in model.parameters()])  # 计算模型参数
-    print("Number of model_total parameter: %.8fM" % (model_total / 1e6))
-
-    train_loss = []
-    loss_function = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-2, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
-    for i in range(200):
-        out = model(train_x)
-        loss = loss_function(out, train_y)
-        loss.backward()
-        optimizer.step()
-        optimizer.zero_grad()
-        train_loss.append(loss.item())
-
-        # 将训练过程的损失值写入文档保存，并在终端打印出来
-        with open('log.txt', 'a+') as f:
-            f.write('{} - {}\n'.format(i + 1, loss.item()))
-        if (i + 1) % 10 == 0:
-            print('Epoch: {}, Loss:{:.5f}'.format(i + 1, loss.item()))
-
-    # for test
-    model = model.eval()  # 转换成测试模式
-
-    # 注意这里用的是全集 模型的输出长度会比原数据少DAYS_FOR_TRAIN 填充使长度相等再作图
-    dataset_x = dataset_x.reshape(-1, 1, DAYS_FOR_TRAIN)  # (seq_size, batch_size, feature_size)
-    dataset_x = torch.from_numpy(dataset_x)
-
-    pred_test = model(dataset_x)  # 全量训练集
-    # 的模型输出 (seq_size, batch_size, output_size)
-    pred_test = pred_test.view(-1).data.numpy()
-    pred_test = np.concatenate((np.zeros(DAYS_FOR_TRAIN), pred_test))  # 填充0 使长度相同
-    assert len(pred_test) == len(df_scaled)
-    pred_test_scaled = pred_test.reshape(-1, 1)  # 转换为列向量
-    pred_test_unscaled = scaler.inverse_transform(pred_test_scaled).flatten()  # 反归一化
-    df_unscaled = scaler.inverse_transform(df_scaled).flatten()
-    y_data_pred = [f"{y:.1f}" for y in pred_test_unscaled.tolist()]
+    #
+    # # 构建LSTM数据
+    # df = pd.DataFrame(data, columns=['date', 'price_min', 'price_max'])
+    # df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
+    # print(df.head())
+    # df['price_avg'] = (df['price_min'] + df['price_max']) / 2
+    # df = df[['price_avg']]
+    #
+    # # 归一化处理
+    # scaler = MinMaxScaler(feature_range=(0, 1))
+    # df_scaled = scaler.fit_transform(df)
+    #
+    # dataset_x, dataset_y = create_dataset(df_scaled, DAYS_FOR_TRAIN)
+    # print(len(dataset_x))
+    # print(len(dataset_y))
+    # # 划分训练集和测试集，70%作为训练集
+    # train_size = int(len(dataset_x) * 0.7)
+    #
+    # train_x = dataset_x[:train_size]
+    # train_y = dataset_y[:train_size]
+    # # 将数据改变形状，RNN 读入的数据维度是 (seq_size, batch_size, feature_size)
+    # train_x = train_x.reshape(-1, 1, DAYS_FOR_TRAIN)
+    # train_y = train_y.reshape(-1, 1, 1)
+    #
+    # # 转为pytorch的tensor对象
+    # train_x = torch.from_numpy(train_x)
+    # train_y = torch.from_numpy(train_y)
+    # print(train_x.dtype)
+    # model = LSTM_Regression(DAYS_FOR_TRAIN, 8, output_size=1, num_layers=2)  # 导入模型并设置模型的参数输入输出层、隐藏层等
+    # model = model.double()
+    # model_total = sum([param.nelement() for param in model.parameters()])  # 计算模型参数
+    # print("Number of model_total parameter: %.8fM" % (model_total / 1e6))
+    #
+    # train_loss = []
+    # loss_function = nn.MSELoss()
+    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-2, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
+    # for i in range(200):
+    #     out = model(train_x)
+    #     loss = loss_function(out, train_y)
+    #     loss.backward()
+    #     optimizer.step()
+    #     optimizer.zero_grad()
+    #     train_loss.append(loss.item())
+    #
+    #     # 将训练过程的损失值写入文档保存，并在终端打印出来
+    #     with open('log.txt', 'a+') as f:
+    #         f.write('{} - {}\n'.format(i + 1, loss.item()))
+    #     if (i + 1) % 10 == 0:
+    #         print('Epoch: {}, Loss:{:.5f}'.format(i + 1, loss.item()))
+    #
+    # # for test
+    # model = model.eval()  # 转换成测试模式
+    #
+    # # 注意这里用的是全集 模型的输出长度会比原数据少DAYS_FOR_TRAIN 填充使长度相等再作图
+    # dataset_x = dataset_x.reshape(-1, 1, DAYS_FOR_TRAIN)  # (seq_size, batch_size, feature_size)
+    # dataset_x = torch.from_numpy(dataset_x)
+    #
+    # pred_test = model(dataset_x)  # 全量训练集
+    # # 的模型输出 (seq_size, batch_size, output_size)
+    # pred_test = pred_test.view(-1).data.numpy()
+    # pred_test = np.concatenate((np.zeros(DAYS_FOR_TRAIN), pred_test))  # 填充0 使长度相同
+    # assert len(pred_test) == len(df_scaled)
+    # pred_test_scaled = pred_test.reshape(-1, 1)  # 转换为列向量
+    # pred_test_unscaled = scaler.inverse_transform(pred_test_scaled).flatten()  # 反归一化
+    # df_unscaled = scaler.inverse_transform(df_scaled).flatten()
+    # y_data_pred = [f"{y:.1f}" for y in pred_test_unscaled.tolist()]
 
     # 绘制折线图
     line = (
@@ -234,12 +236,12 @@ def show_data(request):
             linestyle_opts=opts.LineStyleOpts(width=2),
             itemstyle_opts=opts.ItemStyleOpts(color="#87CEEB"),
         )
-        .add_yaxis(
-            series_name="预测结果",
-            y_axis=y_data_pred,
-            linestyle_opts=opts.LineStyleOpts(width=2),
-            itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
-        )
+        # .add_yaxis(
+        #     series_name="预测结果",
+        #     y_axis=y_data_pred,
+        #     linestyle_opts=opts.LineStyleOpts(width=2),
+        #     itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
+        # )
         .set_global_opts(
             title_opts=opts.TitleOpts(title="价格走势图"),
             xaxis_opts=opts.AxisOpts(type_="time", name="日期"),
@@ -253,6 +255,7 @@ def show_data(request):
     return render(request, "price_echarts.html", context)
 
 
+# 数据库QA 已启用
 def QA(request):
     if request.method == 'POST':
         disease_name = request.POST['disease']
@@ -265,12 +268,61 @@ def QA(request):
     return render(request, 'qa.html')
 
 
+# 第三模块总体预览
+def table(request):
+    return render(request, 'table.html')
+
+
+# 天气预报
+WEATHER_API_KEY = 'SPBVDFMMKeLXB2VYa'
+
+
+def get_weather_data(city):
+    url = f'https://api.seniverse.com/v3/weather/daily.json?key={WEATHER_API_KEY}&location={city}&language=zh-Hans&unit=c&start=0&days=14'
+    response = requests.get(url)
+    data = json.loads(response.content.decode())
+    if data.get('results'):
+        return data['results'][0]['daily']
+    return []
+
+
+def weather(request, city):
+    data = get_weather_data(city)
+    if not data:
+        return JsonResponse({'error': 'No data available'})
+
+    dates = [d['date'] for d in data]
+    high_temps = [d['high'] for d in data]
+    low_temps = [d['low'] for d in data]
+
+    # 创建折线图
+    line = Line()
+    line.add_xaxis(dates)
+    line.add_yaxis('最高气温', high_temps, is_smooth=True)
+    line.add_yaxis('最低气温', low_temps, is_smooth=True)
+    line.set_global_opts(title_opts={'text': f'{city}未来14天天气预报'})
+
+    # 返回图表数据
+    return JsonResponse(json.loads(line.dump_options()), safe=False)
+
+
+# 返回土壤信息
+def soil_info(requeset):
+    return render(requeset, 'soil_info.html')
+
+
+def country_map(request):
+    return render(request, 'country_map.html')
+
+
 '''
 tool
+功能函数
 '''
 import numpy as np
 
 
+# 加载视觉识别模型
 def your_yolov5_model(image):
     # 加载模型
     # model = YOLO('../media/model/best.pt')
@@ -297,6 +349,7 @@ def your_yolov5_model(image):
     }
 
 
+# numpy 转 base64
 def numpy_to_base64(arr):
     # 将numpy数组转换为字节流
     bytes_stream = arr.tobytes()
@@ -315,6 +368,7 @@ def cv2_to_base64(image):
     return base64_string
 
 
+# 生成LSTM数据
 def create_dataset(data, days_for_train=5) -> (np.array, np.array):
     """
         根据给定的序列data，生成数据集
