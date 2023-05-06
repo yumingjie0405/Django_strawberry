@@ -1,10 +1,98 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Random Forest</title>#}
+{#    <!-- 引入 ECharts 和主题文件 -->#}
+{#    <script src="https://cdn.staticfile.org/echarts/5.2.1/echarts.min.js"></script>#}
+{#    <script src="https://cdn.staticfile.org/echarts/5.2.1/extension/bmap.min.js"></script>#}
+{#    <script src="https://cdn.staticfile.org/echarts/5.2.1/extension/dataTool.min.js"></script>#}
+{#    <script src="https://cdn.staticfile.org/echarts/5.2.1/extension/graph.min.js"></script>#}
+{#    <script src="https://cdn.staticfile.org/echarts/5.2.1/extension/liquidfill.min.js"></script>#}
+{#    <script src="../static/js/tree.min.js_2.6.1/cdnjs/tree.min.js"></script>#}
+{##}
+{#    <script src="https://cdn.staticfile.org/echarts/5.2.1/extension/wordCloud.min.js"></script>#}
+{#    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>#}
+{#    <link href="https://cdn.staticfile.org/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>#}
+{#</head>#}
+{#<body>#}
+{#<div class="container-fluid">#}
+{#    <div class="row">#}
+{#        <div class="col-md-6">#}
+{#            <div id="feature_bar" style="height:400px;"></div>#}
+{#        </div>#}
+{#        <div class="col-md-6">#}
+{#            <div id="tree" style="height:600px;"></div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="row">#}
+{#        <div class="col-md-12">#}
+{#            <h3>Random Forest Model Score:</h3>#}
+{#            <p>Train Score: {{ train_score }}</p>#}
+{#            <p>Test Score: {{ test_score }}</p>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#<!-- 渲染特征重要性图表 -->#}
+{#<script>#}
+{#    var feature_bar = echarts.init(document.getElementById('feature_bar'), 'roma');#}
+{#    var option = {{ feature_bar|safe }};#}
+{#    feature_bar.setOption(option);#}
+{#</script>#}
+{#<!-- 渲染随机森林决策边界图表 -->#}
+{#<script>#}
+{#    var tree = echarts.init(document.getElementById('tree'), 'roma');#}
+{#    var option = {{ tree|safe }};#}
+{#    tree.setOption(option);#}
+{#</script>#}
+{#</body>#}
+{#</html>#}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Soil Info</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.1.2/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.22.1/dist/apexcharts.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+<div class="container">
+    <h1>Soil Info</h1>
+    <hr>
 
+    <h2>Random Forest</h2>
+    <h3>Accuracy Scores:</h3>
+    <p>Train Score: <span id="train_score"></span></p>
+    <p>Test Score: <span id="test_score"></span></p>
+
+    <h3>Feature Importance:</h3>
+    <div id="feature_bar" style="width: 800px; height: 600px;"></div>
+
+    <h3>Decision Boundary:</h3>
+    <div id="tree" style="width: 800px; height: 600px;"></div>
+</div>
+
+<script type="text/javascript">
+    var train_score = JSON.parse('{{ train_score  | safe }}');
+    var test_score = JSON.parse('{{ test_score | safe }}');
+    var feature_bar = JSON.parse('{{ feature_bar |  safe }}');
+    var tree = JSON.parse('{{ tree | safe }}');
+
+    // 显示训练分数和测试分数
+    $('#train_score').text(train_score);
+    $('#test_score').text(test_score);
+
+    // 绘制特征重要性柱状图
+    var featureBar = echarts.init(document.getElementById('feature_bar'));
+    featureBar.setOption(feature_bar);
+
+    // 绘制随机森林决策边界
+    var treeChart = echarts.init(document.getElementById('tree'));
+    treeChart.setOption(tree);
+</script>
 </body>
 </html>

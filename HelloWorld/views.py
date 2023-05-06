@@ -6,16 +6,18 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from sklearn.preprocessing import MinMaxScaler
 from torch import nn
-import json
-from HelloWorld.LSTM import LSTM_Regression
 from HelloWorld.models import Userinfo, DiseasesPests, Admin
 from django.http import JsonResponse
 from ultralytics import YOLO
 from pyecharts import options as opts
-from pyecharts.charts import Line
+from pyecharts.charts import Line, Bar, Scatter, Tree
 from datetime import datetime
 from django.db import connection
 import openai
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
 
 # 登陆
@@ -353,15 +355,75 @@ def weather(request):
         low_temps.append(item['tempMin'])
 
     # 将数据传递给模板
-    context = { 'dates': json.dumps(dates), 'high_temps': json.dumps(high_temps),
+    context = {'dates': json.dumps(dates), 'high_temps': json.dumps(high_temps),
                'low_temps': json.dumps(low_temps)}
 
     return render(request, 'weather.html', context)
 
 
-# 返回土壤信息
-def soil_info(requeset):
-    return render(requeset, 'soil_info.html')
+# 返回土壤信息,随机森林
+
+def random_forest(request):
+    # 读取数据
+    data = pd.read_csv(r"C:\Users\smile\Desktop\django_-crop\media\data\Crop_recommendation.csv")
+
+    # 将标签列单独提取出来作为y，并将y转换为整数类型
+    y = data["label"].astype('category').cat.codes
+
+    # 将特征列提取出来作为X
+    X = data.drop("label", axis=1)
+
+    # 将数据集分为训练集和测试集
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    # 建立随机森林模型，n_estimators表示树的数量，可以根据需要进行调整
+    rf = RandomForestClassifier(n_estimators=100)
+
+    # 训练模型
+    rf.fit(X_train, y_train)
+
+    # 在训练集和测试集上分别计算准确率
+    train_score = accuracy_score(y_train, rf.predict(X_train))
+    test_score = accuracy_score(y_test, rf.predict(X_test))
+    print("训练分数：", train_score)
+    print("测试分数：", test_score)
+    # 计算特征的重要性
+    importances = rf.feature_importances_
+    indices = np.argsort(importances)[::-1]
+
+    # 特征重要性可视化
+    feature_bar = (
+        Bar()
+        .add_xaxis(X.columns[indices])
+        .add_yaxis("Feature Importance", importances[indices])
+        .set_global_opts(title_opts=opts.TitleOpts(title="Feature Importances"))
+        .dump_options_with_quotes()
+    )
+
+    # 随机森林决策边界可视化
+    tree_data = []
+    for i, tree in enumerate(rf.estimators_):
+        if i > 10:  # 只显示前10棵树
+            break
+        tree_data.append(tree.tree_.children_left.tolist())
+        tree_data.append(tree.tree_.children_right.tolist())
+        tree_data.append(tree.tree_.feature.tolist())
+        tree_data.append(tree.tree_.threshold.tolist())
+        tree_data.append(tree.tree_.value.tolist())
+    # print(tree_data)
+    tree = (
+        Tree()
+        .add("", tree_data)
+        .set_global_opts(title_opts=opts.TitleOpts(title="Random Forest Decision Boundary"))
+        .dump_options_with_quotes()
+    )
+
+    return render(request, 'soil_info.html', {
+        'train_score': train_score,
+        'test_score': test_score,
+        'feature_bar': feature_bar,
+        'tree': tree,
+    })
 
 
 def country_map(request):
