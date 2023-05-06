@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>主页</title>
-    <!-- Link to your CSS file -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Link to Fontawesome icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-Dzsq8LnStl8QvH7S9RPrN+G8IIxR3jFZhKgPrdWTkwM7/4kOY6sw1U/7W9+D90yGj2jOn7Fzmi8ToTSAv5GrjA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
+<html lang="">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+  		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>乡村振兴</title>
+        <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+        <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
+        <link type="text/css" href="../static/css/demo.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/echarts.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/echarts.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/extension/bmap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../static/css/admin.css"/>
+        <style>
         /* Sidebar navigation */
 .sidebar {
     height: 100%;
-    width: 250px;
+    width: 200px;
     position: fixed;
     top: 0;
     left: 0;
@@ -35,6 +41,8 @@
     color: #f1f1f1;
     text-decoration: none;
     padding: 10px;
+    padding-left: 20%;
+
 }
 
 .sidebar a:hover {
@@ -54,7 +62,7 @@
 }
 
 .background {
-    background-image: url("your-image.jpg");
+    {#background-image: url("your-image.jpg");#}
     background-size: cover;
     height: 100vh;
     width: 100vw;
@@ -65,12 +73,7 @@
 }
 
 /* Typography */
-body {
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    color: #444;
-}
+
 
 h1, h2, h3, h4, h5, h6 {
     font-family: "Helvetica Neue", sans-serif;
@@ -92,28 +95,12 @@ p {
     margin-top: 0;
 }
 
-/* Buttons */
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn:hover {
-    background-color: #0069d9;
-}
-
-    </style>
-</head>
-<body>
-
-    <!-- Sidebar navigation -->
-    <div class="sidebar">
+        </style>
+	</head>
+	<body>
+		<div class="main-layout" id='main-layout'>
+			<!--侧边栏-->
+			    <div class="sidebar">
         <ul>
             <!-- Dashboard -->
             <li class="nav-item">
@@ -157,14 +144,18 @@ p {
             </li>
         </ul>
     </div>
+			<!--右侧内容-->
+			<div class="main-layout-container">
+				<!--主体内容-->
+				<div class="main-layout-body">
+					<!--tab 切换-->
+			    </div>
+			<!--遮罩-->
+			<div class="main-mask"></div>
+            </div></div>
+		<script src="../static/js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../static/js/main.js" type="text/javascript" charset="utf-8"></script>
 
-    <!-- Main content -->
-    <div class="main">
-        <!-- Background image -->
-        <div class="background"></div>
-    </div>
-
-    <!-- Link to your JS file -->
-    <script src="script.js"></script>
-</body>
+	</body>
 </html>
+

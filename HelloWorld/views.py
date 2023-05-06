@@ -287,8 +287,8 @@ def QA(request):
 
 
 # 第三模块总体预览
-def table(request):
-    return render(request, 'table.html')
+# def table(request):
+#     return render(request, 'table.html')
 
 
 # 天气预报
