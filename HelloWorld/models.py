@@ -1,11 +1,14 @@
 from django.db import models
 
+from django.db import models
 
 # Create your models here.
 
 class Admin(models.Model):
     username=models.CharField(verbose_name="姓名",max_length=16)
     password=models.CharField(verbose_name="密码",max_length=64)
+    def __str__(self):
+        return self.text
 
 class Userinfo(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -28,8 +31,6 @@ class Answer(models.Model):
     def __str__(self):
         return self.text
 
-
-from django.db import models
 
 class DiseasesPests(models.Model):
     did = models.CharField(max_length=20, primary_key=True)

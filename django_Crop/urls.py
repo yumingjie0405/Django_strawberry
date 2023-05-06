@@ -20,7 +20,7 @@ from HelloWorld import views, consumers
 from HelloWorld.routing import websocket_urlpatterns
 
 urlpatterns = [
-    path('sign_in/', views.login),
+    path('', views.login),
     path('sign_up/', views.register),
     path('overview/', views.overview),
     path('homepage/', views.homepage),
@@ -33,7 +33,7 @@ urlpatterns = [
     # 价格预测板块
     path('Price/', views.show_data, name='Price'),
     # path('predict_price/',views.predict_price),
-    # 问答板块 TODO chatgpt 但是限额
+    # 问答板块 ChatGPT
     path('NLP/', views.ChatView.as_view(), name='nlp'),
     path('chat/', views.chat),
     # 问答板块暂时由数据库查询凑合
