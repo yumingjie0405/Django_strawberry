@@ -8,43 +8,46 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-{#    <style>#}
-{#        body{#}
-{#            background-image: url("../static/images/backgrounds/dao.jpg");#}
-{#            background-size: 100% ;#}
-{#        }#}
-{#    </style>#}
+    {#    <style>#}
+    {#        body{#}
+    {#            background-image: url("../static/images/backgrounds/dao.jpg");#}
+    {#            background-size: 100% ;#}
+    {#        }#}
+    {#    </style>#}
     <style>
-      .bj{
+        .bj {
 
-      position: fixed;  /*将图片固定，不随页面滚动*/
+            position: fixed; /*将图片固定，不随页面滚动*/
 
-      opacity: 0.65;  /*修改透明度*/
+            opacity: 0.65; /*修改透明度*/
 
-      height: 100%;
+            height: 100%;
 
-      width: 100%;
+            width: 100%;
 
-      z-index: -1;  /*将图片放在最底层*/
+            z-index: -1; /*将图片放在最底层*/
 
-  }
+        }
     </style>
 </head>
 <body>
 <img src="../static/images/backgrounds/dao.jpg" class="bj" alt="">
 <div class="container">
+    <br>
+    <br>
     <h2>YOLOV8 草莓病害识别</h2>
     <hr>
     <form method="post" enctype="multipart/form-data" id="image-form" style="display: flex;">
         {% csrf_token %}
         <div class="form-group" style="flex: 1 ;">
             <div class="input-group mb-3">
-              <label class="form-control " for="inputGroupFile02 image" >上传图片</label>
-              <input type="file" class="form-control" id="inputGroupFile02 image" name="image" style="display: none" >
+                <label class="form-control " for="inputGroupFile02 image">上传图片</label>
+                <input type="file" class="form-control" id="inputGroupFile02 image" name="image" style="display: none">
             </div>
         </div>
         <div class="form-group" style="flex: 1;">
-            <button type="submit" class="btn btn-primary" id="predict-btn" style="background-color: forestgreen">预测</button>
+            <button type="submit" class="btn btn-primary" id="predict-btn" style="background-color: forestgreen">预测
+            </button>
         </div>
     </form>
 
@@ -92,7 +95,7 @@
                             6: '草莓叶斑病',
                             7: '草莓粉霉病（果实）',
                             8: '草莓粉霉病（叶片）',
-                            9: '番茄晚疫病',
+                            9: '番茄枯萎病',
                             10: '番茄叶',
                             11: '番茄蜘蛛螨'
                         }
