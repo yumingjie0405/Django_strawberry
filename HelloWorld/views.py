@@ -1,5 +1,6 @@
 import base64
 import cv2
+import pydot
 import torch
 import requests
 from django.shortcuts import render, redirect
@@ -7,7 +8,7 @@ from django.views.generic import TemplateView
 from sklearn.preprocessing import MinMaxScaler
 from torch import nn
 from HelloWorld.models import Userinfo, DiseasesPests, Admin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from ultralytics import YOLO
 from pyecharts import options as opts
 from pyecharts.charts import Line, Bar, Scatter, Tree
@@ -18,6 +19,8 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+
+from django_Crop.settings import BASE_DIR
 
 
 # 登陆
@@ -362,7 +365,7 @@ def weather(request):
 
 
 # 返回土壤信息,随机森林
-
+# pass
 def random_forest(request):
     # 读取数据
     data = pd.read_csv(r"C:\Users\smile\Desktop\django_-crop\media\data\Crop_recommendation.csv")
@@ -424,6 +427,71 @@ def random_forest(request):
         'feature_bar': feature_bar,
         'tree': tree,
     })
+
+
+from pyecharts import options as opts
+from pyecharts.charts import Tree
+import os
+
+# 读取 DOT 文件
+with open(os.path.join(BASE_DIR, 'tools/tree.dot'), 'r') as f:
+    dot_data = f.read()
+
+# 将 DOT 文件转换为 Pyecharts 中的 Tree 对象
+tree = Tree()
+tree.add("", [], label_opts=opts.LabelOpts(font_size=14))
+tree = tree.load_javascript()
+
+# 将 DOT 数据转换为 JSON 格式
+graph = pydot.graph_from_dot_data(dot_data)[0].to_string()
+
+import os
+import pydot
+from django.shortcuts import render
+from pyecharts import options as opts
+from pyecharts.charts import Tree
+
+def show_decision_tree(request):
+    # 读取 DOT 文件并转换为 PyDot 对象
+    with open(os.path.join(BASE_DIR, 'tools/tree.dot'), 'r') as f:
+        dot_data = f.read()
+    graph = pydot.graph_from_dot_data(dot_data)[0]
+
+    # 创建 Pyecharts 中的 Tree 对象
+    tree = Tree()
+    tree.add("", [], label_opts=opts.LabelOpts(font_size=14))
+
+    # 遍历 DOT 对象并添加节点和边
+    for node in graph.get_node_list():
+        name = node.get_name()
+        if 'parent' in node.obj_dict:
+            parent = node.obj_dict['parent']
+        else:
+            parent = None
+        if 'label' in node.obj_dict['attributes']:
+            label = node.obj_dict['attributes']['label']
+        else:
+            label = None
+        if parent:
+            parent_name = parent[0].obj_dict['name']
+            tree.add(name, [parent_name],
+                     symbol='rect', symbol_size=[100, 30],
+                     label_opts=opts.LabelOpts(font_size=14))
+        else:
+            tree.add(name, [],
+                     symbol='rect', symbol_size=[100, 30],
+                     label_opts=opts.LabelOpts(font_size=14))
+
+    # 将图形数据转换为 JSON 格式
+    json_data = tree.dump_options_with_quotes()
+    # print(json_data)
+    # 将图形数据和决策树字符串传递给前端页面
+    return render(request, 'decision_tree.html', {
+        'tree_data': json_data,
+        'dot_data': dot_data,
+    })
+
+
 
 
 def country_map(request):

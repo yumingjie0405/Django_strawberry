@@ -42,7 +42,8 @@ urlpatterns = [
     # path('ws/chat/', consumers.ChatConsumer.as_asgi())
     # path('table/', views.table, name='table'),
     path('weather/', views.weather, name='weather'),
-    path('soil/', views.random_forest, name='soil'),
+    # path('soil/', views.random_forest, name='soil'),
+    path('soil/', views.show_decision_tree, name='soil'),
     path('china_map/', views.country_map, name='china_map'),
 
 ]

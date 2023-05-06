@@ -48,16 +48,68 @@
 {#</script>#}
 {#</body>#}
 {#</html>#}
+
+
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Soil Info</title>#}
+{#    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>#}
+{#    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.1.2/echarts.min.js"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.22.1/dist/apexcharts.min.js"></script>#}
+{#    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css">#}
+{#    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>#}
+{#</head>#}
+{#<body>#}
+{#<div class="container">#}
+{#    <h1>Soil Info</h1>#}
+{#    <hr>#}
+{##}
+{#    <h2>Random Forest</h2>#}
+{#    <h3>Accuracy Scores:</h3>#}
+{#    <p>Train Score: <span id="train_score"></span></p>#}
+{#    <p>Test Score: <span id="test_score"></span></p>#}
+{##}
+{#    <h3>Feature Importance:</h3>#}
+{#    <div id="feature_bar" style="width: 800px; height: 600px;"></div>#}
+{##}
+{#    <h3>Decision Boundary:</h3>#}
+{#    <div id="tree" style="width: 800px; height: 600px;"></div>#}
+{#</div>#}
+{##}
+{#<script type="text/javascript">#}
+{#    var train_score = JSON.parse('{{ train_score  | safe }}');#}
+{#    var test_score = JSON.parse('{{ test_score | safe }}');#}
+{#    var feature_bar = JSON.parse('{{ feature_bar |  safe }}');#}
+{#    var tree = JSON.parse('{{ tree | safe }}');#}
+{##}
+{#    // 显示训练分数和测试分数#}
+{#    $('#train_score').text(train_score);#}
+{#    $('#test_score').text(test_score);#}
+{##}
+{#    // 绘制特征重要性柱状图#}
+{#    var featureBar = echarts.init(document.getElementById('feature_bar'));#}
+{#    featureBar.setOption(feature_bar);#}
+{##}
+{#    // 绘制随机森林决策边界#}
+{#    var treeChart = echarts.init(document.getElementById('tree'));#}
+{#    treeChart.setOption(tree);#}
+{#</script>#}
+{#</body>#}
+{#</html>#}
+
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Soil Info</title>
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 引入 echarts.min.js 和 apexcharts.min.js 库 -->
     <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.1.2/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.22.1/dist/apexcharts.min.js"></script>
+    <!-- 引入 bootstrap.min.css 库 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css">
-    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -77,21 +129,24 @@
 </div>
 
 <script type="text/javascript">
-    var train_score = JSON.parse('{{ train_score  | safe }}');
-    var test_score = JSON.parse('{{ test_score | safe }}');
-    var feature_bar = JSON.parse('{{ feature_bar |  safe }}');
-    var tree = JSON.parse('{{ tree | safe }}');
+    var train_score = JSON.parse('{{ train_score|safe }}');
+
+    var test_score = JSON.parse('{{ test_score|safe}}');
+    var feature_bar = JSON.parse('{{ feature_bar|escapejs }}');
+
+    var tree = JSON.parse('{{ tree | escapejs }}');
 
     // 显示训练分数和测试分数
-    $('#train_score').text(train_score);
-    $('#test_score').text(test_score);
-
+    {#$('#train_score').text(train_score);#}
+    {#$('#test_score').text(test_score);#}
+            <p>Train Score: {{ train_score }}</p>
+            <p>Test Score: {{ test_score }}</p>
     // 绘制特征重要性柱状图
-    var featureBar = echarts.init(document.getElementById('feature_bar'));
+    var featureBar = echarts.init(document.getElementById('feature_bar'), 'vintage');
     featureBar.setOption(feature_bar);
 
     // 绘制随机森林决策边界
-    var treeChart = echarts.init(document.getElementById('tree'));
+    var treeChart = echarts.init(document.getElementById('tree'), 'vintage');
     treeChart.setOption(tree);
 </script>
 </body>
