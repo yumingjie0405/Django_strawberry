@@ -43,7 +43,7 @@ urlpatterns = [
     # path('table/', views.table, name='table'),
     path('weather/', views.weather, name='weather'),
     # path('soil/', views.random_forest, name='soil'),
-    path('soil/', views.show_decision_tree, name='soil'),
+    path('charts/', views.show_charts, name='charts'),
     path('china_map/', views.country_map, name='china_map'),
 
 ]

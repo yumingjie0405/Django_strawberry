@@ -1,26 +1,33 @@
-import base64
 import cv2
+import numpy as np
 import pydot
-import torch
-import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
-from sklearn.preprocessing import MinMaxScaler
-from torch import nn
-from HelloWorld.models import Userinfo, DiseasesPests, Admin
-from django.http import JsonResponse, HttpResponse
+import matplotlib
+
+matplotlib.use('Agg')
+from pyecharts.charts import Bar, Boxplot
+from django.utils.safestring import mark_safe
+from HelloWorld.models import DiseasesPests, Admin
+from django.http import JsonResponse
 from ultralytics import YOLO
-from pyecharts import options as opts
-from pyecharts.charts import Line, Bar, Scatter, Tree
 from datetime import datetime
 from django.db import connection
 import openai
-import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+from pyecharts.charts import Bar, Line
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import base64
 from django_Crop.settings import BASE_DIR
+from django.views.decorators.csrf import csrf_exempt
 
 
 # 登陆
@@ -70,7 +77,7 @@ def contact(request):
 
 
 # 病虫害视觉识别
-# TODO 使用yolov8 + tensorrt 推理
+# 使用yolov8 + tensorrt 推理
 def predict(request):
     if request.method == 'POST' and request.FILES['image']:
         # 获取上传的图像
@@ -111,8 +118,6 @@ class ChatView(TemplateView):
 
 openai.api_key = "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"
 
-from django.views.decorators.csrf import csrf_exempt
-
 
 @csrf_exempt
 def chat(request):
@@ -136,10 +141,6 @@ def chat(request):
         return JsonResponse({"response": response})
     else:
         return render(request, 'chat.html')
-
-
-'''
-'''
 
 
 def show_price_predict(request):
@@ -445,12 +446,8 @@ tree = tree.load_javascript()
 # 将 DOT 数据转换为 JSON 格式
 graph = pydot.graph_from_dot_data(dot_data)[0].to_string()
 
-import os
-import pydot
-from django.shortcuts import render
-from pyecharts import options as opts
-from pyecharts.charts import Tree
 
+# 放弃，决策树太庞大
 def show_decision_tree(request):
     # 读取 DOT 文件并转换为 PyDot 对象
     with open(os.path.join(BASE_DIR, 'tools/tree.dot'), 'r') as f:
@@ -492,6 +489,114 @@ def show_decision_tree(request):
     })
 
 
+# data = pd.read_csv(os.path.join(BASE_DIR, 'media/data/Crop_recommendation.csv'))
+def show_charts(request):
+    # 读取csv文件并打乱数据
+    data = pd.read_csv(os.path.join(BASE_DIR, 'media/data/Crop_recommendation.csv'))
+    data = data.sample(frac=1, random_state=42).reset_index(drop=True)
+
+    # 划分数据集为训练集和测试集
+    X = data.iloc[:, :-1].values
+    y = data.iloc[:, -1].values
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # 对数据进行标准化处理
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+
+    # 使用sklearn的决策树模型进行训练
+    clf = DecisionTreeClassifier()
+    clf.fit(X_train, y_train)
+
+    # 在测试集上进行预测并计算准确率
+    y_pred = clf.predict(X_test)
+    accuracy = np.mean(y_pred == y_test)
+    test_accuracy = 'Test Accuracy: {:.2f}%'.format(accuracy * 100)
+
+    # 绘制决策树
+    fig, ax = plt.subplots(figsize=(20, 10))
+    plot_tree(clf, filled=True, feature_names=data.columns[:-1], ax=ax)
+    # 将绘制好的图形转换为base64编码，以便在模板中显示
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_base64 = base64.b64encode(buffer.getvalue()).decode()
+    plt.close()
+
+    # 按照不同种类的作物进行分组，并统计每组中pH值的平均值
+    grouped_data = data.groupby('label')['ph'].mean()
+
+    # 绘制柱状图
+    bar_chart = (
+        Bar()
+        .add_xaxis(list(grouped_data.index))
+        .add_yaxis("pH (mean)", list(grouped_data.values))
+        .set_global_opts(
+            xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=30, font_size=12)),
+            title_opts=opts.TitleOpts(title="Mean pH Value by Crop Type", subtitle="", pos_left='center', pos_top='top',
+                                      padding=20)
+        )
+        .set_series_opts(
+            label_opts=opts.LabelOpts(position="top", font_size=12)
+        )
+        .render()
+    )
+    # 将绘制好的图形转换为 base64 编码，以便在模板中显示
+    bar_base64 = base64.b64encode(bytes(bar_chart, 'utf-8')).decode()
+
+    # 可视化每个特征的分布
+    fig, ax = plt.subplots()
+    sns.histplot(data=data, x="N", hue="label", element="step", kde=True, ax=ax)
+    ax.set(title="Distribution of N")
+    buffer1 = io.BytesIO()
+    fig.savefig(buffer1, format='png')
+    buffer1.seek(0)
+    image1_base64 = base64.b64encode(buffer1.getvalue()).decode()
+    plt.close()
+
+    fig, ax = plt.subplots()
+    sns.histplot(data=data, x="P", hue="label", element="step", kde=True, ax=ax)
+    ax.set(title="Distribution of P")
+    buffer2 = io.BytesIO()
+    fig.savefig(buffer2, format='png')
+    buffer2.seek(0)
+    image2_base64 = base64.b64encode(buffer2.getvalue()).decode()
+    plt.close()
+
+    fig, ax = plt.subplots()
+    sns.histplot(data=data, x="K", hue="label", element="step", kde=True, ax=ax)
+    ax.set(title="Distribution of K")
+    buffer3 = io.BytesIO()
+    fig.savefig(buffer3, format='png')
+    buffer3.seek(0)
+    image3_base64 = base64.b64encode(buffer3.getvalue()).decode()
+    plt.close()  # 绘制箱线图
+    box_data = [data[data['label'] == i]['rainfall'] for i in sorted(data['label'].unique())]
+    box_labels = sorted(data['label'].unique())
+    boxplot = (
+        Boxplot()
+        .add_xaxis(box_labels)
+        .add_yaxis("Rainfall", box_data)
+        .set_global_opts(
+            xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=30, font_size=12)),
+            title_opts=opts.TitleOpts(title="Rainfall Distribution by Crop Type", subtitle="", pos_left='center',
+                                      pos_top='top', padding=20)
+        )
+        .set_series_opts(
+            label_opts=opts.LabelOpts(position="top", font_size=12),
+            box_gap=20
+        )
+        .render_embed()
+    )
+
+    return render(request, 'charts.html', {'image_base64': image_base64,
+                                           'bar_chart': mark_safe(bar_base64),
+                                           'image1_base64': image1_base64,
+                                           'image2_base64': image2_base64,
+                                           'image3_base64': image3_base64,
+                                           'boxplot': boxplot,
+                                           'test_accuracy': test_accuracy})
 
 
 def country_map(request):
@@ -502,7 +607,6 @@ def country_map(request):
 tool
 功能函数
 '''
-import numpy as np
 
 
 # 加载视觉识别模型

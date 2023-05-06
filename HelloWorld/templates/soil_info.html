@@ -139,8 +139,8 @@
     // 显示训练分数和测试分数
     {#$('#train_score').text(train_score);#}
     {#$('#test_score').text(test_score);#}
-            <p>Train Score: {{ train_score }}</p>
-            <p>Test Score: {{ test_score }}</p>
+    <p>Train Score: {{ train_score }}</p>
+    <p>Test Score: {{ test_score }}</p>
     // 绘制特征重要性柱状图
     var featureBar = echarts.init(document.getElementById('feature_bar'), 'vintage');
     featureBar.setOption(feature_bar);
