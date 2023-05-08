@@ -1,0 +1,82 @@
+<script>
+$(document).ready(function () {
+    var usingCamera = false;
+
+    $('#camera-btn').on('click', function () {
+        if (!usingCamera) {
+            $(this).text('停止');
+            usingCamera = true;
+            var video = document.createElement('video');
+            video.autoplay = true;
+            navigator.mediaDevices.getUserMedia({video: true})
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    $('#image-form').hide();
+                    $('#predict-btn').prop('disabled', true);
+                    $('#result-container').hide();
+                    $('#predict-img').removeAttr('src');
+                    $('#camera-container').append(video);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    usingCamera = false;
+                });
+        } else {
+            $(this).text('摄像头');
+            usingCamera = false;
+            var video = $('#camera-container video')[0];
+            if (video) {
+                video.srcObject.getTracks()[0].stop();
+                video.remove();
+                $('#image-form').show();
+                $('#predict-btn').prop('disabled', false);
+            }
+        }
+    });
+
+    $('#image-form').on('submit', function (e) {
+        e.preventDefault();
+        var formData = new FormData($(this)[0]);
+        if (usingCamera) {
+            var video = $('#camera-container video')[0];
+            var canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(function (blob) {
+                formData.append('image', blob, 'image.jpg');
+                sendRequest(formData);
+            }, 'image/jpeg', 0.95);
+        } else {
+            sendRequest(formData);
+        }
+    });
+
+    function sendRequest(formData) {
+        $.ajax({
+            url: '{% url "predict" %}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('#result-table').empty();
+                for (var i = 0; i < response.predictions.length; i++) {
+                    var prediction = response.predictions[i];
+                    var row = $('<tr>');
+                    $('<td>').text(prediction.class_name).appendTo(row);
+                    $('<td>').text(prediction.confidence.toFixed(2)).appendTo(row);
+                    $('<td>').text(JSON.stringify(prediction.box)).appendTo(row);
+                    row.appendTo('#result-table');
+                }
+                $('#predict-img').attr('src', response.image_url);
+                $('#result-container').show();
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+});
+</script>

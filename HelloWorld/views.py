@@ -1,15 +1,16 @@
 import cv2
 import numpy as np
 import pydot
+import pymysql
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 import matplotlib
 
 matplotlib.use('Agg')
-from pyecharts.charts import Bar, Boxplot
+from pyecharts.charts import Bar, Boxplot, Map
 from django.utils.safestring import mark_safe
 from HelloWorld.models import DiseasesPests, Admin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from ultralytics import YOLO
 from datetime import datetime
 from django.db import connection
@@ -77,7 +78,7 @@ def contact(request):
 
 
 # 病虫害视觉识别
-# 使用yolov8 + tensorrt 推理
+# 使用yolov8
 def predict(request):
     if request.method == 'POST' and request.FILES['image']:
         # 获取上传的图像
@@ -175,79 +176,13 @@ def show_data(request):
     x_data = [datetime.strptime(str(d[0]), '%Y-%m-%d') for d in data]
     y_data_min = [d[1] for d in data]
     y_data_max = [d[2] for d in data]
-    #
-    # # 构建LSTM数据
-    # df = pd.DataFrame(data, columns=['date', 'price_min', 'price_max'])
-    # df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
-    # print(df.head())
-    # df['price_avg'] = (df['price_min'] + df['price_max']) / 2
-    # df = df[['price_avg']]
-    #
-    # # 归一化处理
-    # scaler = MinMaxScaler(feature_range=(0, 1))
-    # df_scaled = scaler.fit_transform(df)
-    #
-    # dataset_x, dataset_y = create_dataset(df_scaled, DAYS_FOR_TRAIN)
-    # print(len(dataset_x))
-    # print(len(dataset_y))
-    # # 划分训练集和测试集，70%作为训练集
-    # train_size = int(len(dataset_x) * 0.7)
-    #
-    # train_x = dataset_x[:train_size]
-    # train_y = dataset_y[:train_size]
-    # # 将数据改变形状，RNN 读入的数据维度是 (seq_size, batch_size, feature_size)
-    # train_x = train_x.reshape(-1, 1, DAYS_FOR_TRAIN)
-    # train_y = train_y.reshape(-1, 1, 1)
-    #
-    # # 转为pytorch的tensor对象
-    # train_x = torch.from_numpy(train_x)
-    # train_y = torch.from_numpy(train_y)
-    # print(train_x.dtype)
-    # model = LSTM_Regression(DAYS_FOR_TRAIN, 8, output_size=1, num_layers=2)  # 导入模型并设置模型的参数输入输出层、隐藏层等
-    # model = model.double()
-    # model_total = sum([param.nelement() for param in model.parameters()])  # 计算模型参数
-    # print("Number of model_total parameter: %.8fM" % (model_total / 1e6))
-    #
-    # train_loss = []
-    # loss_function = nn.MSELoss()
-    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-2, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
-    # for i in range(200):
-    #     out = model(train_x)
-    #     loss = loss_function(out, train_y)
-    #     loss.backward()
-    #     optimizer.step()
-    #     optimizer.zero_grad()
-    #     train_loss.append(loss.item())
-    #
-    #     # 将训练过程的损失值写入文档保存，并在终端打印出来
-    #     with open('log.txt', 'a+') as f:
-    #         f.write('{} - {}\n'.format(i + 1, loss.item()))
-    #     if (i + 1) % 10 == 0:
-    #         print('Epoch: {}, Loss:{:.5f}'.format(i + 1, loss.item()))
-    #
-    # # for test
-    # model = model.eval()  # 转换成测试模式
-    #
-    # # 注意这里用的是全集 模型的输出长度会比原数据少DAYS_FOR_TRAIN 填充使长度相等再作图
-    # dataset_x = dataset_x.reshape(-1, 1, DAYS_FOR_TRAIN)  # (seq_size, batch_size, feature_size)
-    # dataset_x = torch.from_numpy(dataset_x)
-    #
-    # pred_test = model(dataset_x)  # 全量训练集
-    # # 的模型输出 (seq_size, batch_size, output_size)
-    # pred_test = pred_test.view(-1).data.numpy()
-    # pred_test = np.concatenate((np.zeros(DAYS_FOR_TRAIN), pred_test))  # 填充0 使长度相同
-    # assert len(pred_test) == len(df_scaled)
-    # pred_test_scaled = pred_test.reshape(-1, 1)  # 转换为列向量
-    # pred_test_unscaled = scaler.inverse_transform(pred_test_scaled).flatten()  # 反归一化
-    # df_unscaled = scaler.inverse_transform(df_scaled).flatten()
-    # y_data_pred = [f"{y:.1f}" for y in pred_test_unscaled.tolist()]
 
     # 绘制折线图
     line = (
         Line()
         .add_xaxis(xaxis_data=x_data)
         .add_yaxis(
-            series_name="最低价",
+            series_name="预测值",
             y_axis=y_data_min,
             linestyle_opts=opts.LineStyleOpts(width=2),
             itemstyle_opts=opts.ItemStyleOpts(color="#FF8C00"),
@@ -258,20 +193,22 @@ def show_data(request):
             linestyle_opts=opts.LineStyleOpts(width=2),
             itemstyle_opts=opts.ItemStyleOpts(color="#87CEEB"),
         )
-        # .add_yaxis(
-        #     series_name="预测结果",
-        #     y_axis=y_data_pred,
-        #     linestyle_opts=opts.LineStyleOpts(width=2),
-        #     itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
-        # )
+
         .set_global_opts(
             title_opts=opts.TitleOpts(title="价格走势图"),
             xaxis_opts=opts.AxisOpts(type_="time", name="日期"),
             yaxis_opts=opts.AxisOpts(name="价格"),
             tooltip_opts=opts.TooltipOpts(trigger="axis"),
+            axispointer_opts=opts.AxisPointerOpts(type_="cross", label=opts.LabelOpts(formatter="{value}")),
         )
-    )
 
+    )
+    # .add_yaxis(
+    #     series_name="预测结果",
+    #     y_axis=y_data_pred,
+    #     linestyle_opts=opts.LineStyleOpts(width=2),
+    #     itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
+    # )
     # 将图表渲染到 HTML 模板
     context = {"line": line.render_embed()}
     return render(request, "price_echarts.html", context)
@@ -305,7 +242,6 @@ WEATHER_API_KEY = 'SPBVDFMMKeLXB2VYa'
 #     if data.get('results'):
 #         return data['results'][0]['daily']
 #     return []
-#
 
 
 import requests
@@ -512,7 +448,7 @@ def show_charts(request):
     # 在测试集上进行预测并计算准确率
     y_pred = clf.predict(X_test)
     accuracy = np.mean(y_pred == y_test)
-    test_accuracy = 'Test Accuracy: {:.2f}%'.format(accuracy * 100)
+    test_accuracy = '测试集上的正确率: {:.2f}%'.format(accuracy * 100)
 
     # 绘制决策树
     fig, ax = plt.subplots(figsize=(20, 10))
@@ -534,7 +470,7 @@ def show_charts(request):
         .add_yaxis("pH (mean)", list(grouped_data.values))
         .set_global_opts(
             xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=30, font_size=12)),
-            title_opts=opts.TitleOpts(title="Mean pH Value by Crop Type", subtitle="", pos_left='center', pos_top='top',
+            title_opts=opts.TitleOpts(title="各作物类型的平均 pH 值", subtitle="", pos_left='center', pos_top='top',
                                       padding=20)
         )
         .set_series_opts(
@@ -599,8 +535,54 @@ def show_charts(request):
                                            'test_accuracy': test_accuracy})
 
 
+
+import pymysql
+from pyecharts.charts import Map
+from pyecharts import options as opts
+from django.http import JsonResponse
+import pymysql
+from django.http import JsonResponse
+from pyecharts import options as opts
+from pyecharts.charts import Map
+
+
+# 引入 pyecharts 组件
+from pyecharts.charts import Map
+from pyecharts import options as opts
+
 def country_map(request):
-    return render(request, 'country_map.html')
+    # 连接 MySQL 数据库
+    conn = pymysql.connect(
+        host="localhost",
+        user="root",
+        password="123456",
+        db="crop",
+        port=3306,
+        charset="utf8"
+    )
+    cursor = conn.cursor()
+
+    # 从数据库中获取农作物数据
+    cursor.execute("SELECT province, crop, price FROM strawberry_data")
+    data = cursor.fetchall()
+
+    # 将数据处理成 pyecharts 中需要的格式
+    provinces = [x[0] for x in data]
+    values = [x[2] for x in data]
+    map_data = list(zip(provinces, values))
+
+    # 使用 pyecharts 渲染中国地图
+    map_chart = (
+        Map()
+        .add("草莓价格", map_data, "china")
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title="中国草莓价格"),
+            visualmap_opts=opts.VisualMapOpts(max_=20),
+        )
+    )
+
+    # 将生成的 HTML 文件返回给用户
+    return HttpResponse(map_chart.render_embed())
 
 
 '''

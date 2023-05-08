@@ -27,7 +27,6 @@ urlpatterns = [
     path('about/', views.about),
     path('contact/', views.contact),
     # 视觉识别板块
-    # path('Vision/', views.show_vision_predict),
     path('predict/', views.predict, name='predict'),
 
     # 价格预测板块

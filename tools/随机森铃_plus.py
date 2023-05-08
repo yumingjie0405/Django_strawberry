@@ -1,12 +1,12 @@
 import numpy as np
 import pandas as pd
-from 作物预测.ensemble import RandomForestClassifier
-from 作物预测.model_selection import train_test_split
-from 作物预测.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 from mlxtend.plotting import plot_decision_regions
-from 作物预测.tree import export_graphviz
+from sklearn.tree import export_graphviz
 import pydot
 
 # 读取数据
