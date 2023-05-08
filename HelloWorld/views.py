@@ -1,24 +1,35 @@
-import base64
 import cv2
-import torch
-import requests
-from django.shortcuts import render, redirect
+import numpy as np
+import pydot
+import pymysql
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
-from sklearn.preprocessing import MinMaxScaler
-from torch import nn
-from HelloWorld.models import Userinfo, DiseasesPests, Admin
-from django.http import JsonResponse
+import matplotlib
+
+matplotlib.use('Agg')
+from pyecharts.charts import Bar, Boxplot, Map
+from django.utils.safestring import mark_safe
+from HelloWorld.models import DiseasesPests, Admin
+from django.http import JsonResponse, HttpResponse
 from ultralytics import YOLO
-from pyecharts import options as opts
-from pyecharts.charts import Line, Bar, Scatter, Tree
 from datetime import datetime
 from django.db import connection
 import openai
-import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from django.contrib.auth import logout
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+from pyecharts.charts import Bar, Line
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import base64
+from django_Crop.settings import BASE_DIR
+from django.views.decorators.csrf import csrf_exempt
+
 
 # 登陆
 def login(request):
@@ -29,7 +40,6 @@ def login(request):
     try:
         admin = Admin.objects.filter(username=username).first()
         if admin.password == password:
-            request.session["info"]={'username':admin.username,'password':admin.password}
             return redirect('/overview/')
     except Admin.DoesNotExist:
         pass
@@ -44,25 +54,14 @@ def register(request):
     # 获取输入的数据
     usn = request.POST.get("username")
     psw = request.POST.get("password")
-    if Admin.objects.filter(username=usn).exists():
-        return render(request, 'sign_up.html', {'error': '该用户名已存在，请重新注册。'})
     # 连接数据库
     Admin.objects.create(username=usn, password=psw)
     # 添加完成，返回给管理用户网页
     return redirect('/sign_in/')
 
-#退出登录
-def logout_view(request):
-    if 'info' in request.session:
-        del request.session['info']
-    # 返回到登陆页面
-    return redirect('/sign_in/')
 
 # 主界面
 def overview(request):
-    # info=request.session.get("info")
-    # if not info:
-    #     return redirect('/sign_in/')
     return render(request, 'overview.html')
 
 
@@ -79,7 +78,7 @@ def contact(request):
 
 
 # 病虫害视觉识别
-# TODO 使用yolov8 + tensorrt 推理
+# 使用yolov8
 def predict(request):
     if request.method == 'POST' and request.FILES['image']:
         # 获取上传的图像
@@ -120,8 +119,6 @@ class ChatView(TemplateView):
 
 openai.api_key = "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"
 
-from django.views.decorators.csrf import csrf_exempt
-
 
 @csrf_exempt
 def chat(request):
@@ -145,10 +142,6 @@ def chat(request):
         return JsonResponse({"response": response})
     else:
         return render(request, 'chat.html')
-
-
-'''
-'''
 
 
 def show_price_predict(request):
@@ -183,79 +176,13 @@ def show_data(request):
     x_data = [datetime.strptime(str(d[0]), '%Y-%m-%d') for d in data]
     y_data_min = [d[1] for d in data]
     y_data_max = [d[2] for d in data]
-    #
-    # # 构建LSTM数据
-    # df = pd.DataFrame(data, columns=['date', 'price_min', 'price_max'])
-    # df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
-    # print(df.head())
-    # df['price_avg'] = (df['price_min'] + df['price_max']) / 2
-    # df = df[['price_avg']]
-    #
-    # # 归一化处理
-    # scaler = MinMaxScaler(feature_range=(0, 1))
-    # df_scaled = scaler.fit_transform(df)
-    #
-    # dataset_x, dataset_y = create_dataset(df_scaled, DAYS_FOR_TRAIN)
-    # print(len(dataset_x))
-    # print(len(dataset_y))
-    # # 划分训练集和测试集，70%作为训练集
-    # train_size = int(len(dataset_x) * 0.7)
-    #
-    # train_x = dataset_x[:train_size]
-    # train_y = dataset_y[:train_size]
-    # # 将数据改变形状，RNN 读入的数据维度是 (seq_size, batch_size, feature_size)
-    # train_x = train_x.reshape(-1, 1, DAYS_FOR_TRAIN)
-    # train_y = train_y.reshape(-1, 1, 1)
-    #
-    # # 转为pytorch的tensor对象
-    # train_x = torch.from_numpy(train_x)
-    # train_y = torch.from_numpy(train_y)
-    # print(train_x.dtype)
-    # model = LSTM_Regression(DAYS_FOR_TRAIN, 8, output_size=1, num_layers=2)  # 导入模型并设置模型的参数输入输出层、隐藏层等
-    # model = model.double()
-    # model_total = sum([param.nelement() for param in model.parameters()])  # 计算模型参数
-    # print("Number of model_total parameter: %.8fM" % (model_total / 1e6))
-    #
-    # train_loss = []
-    # loss_function = nn.MSELoss()
-    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-2, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
-    # for i in range(200):
-    #     out = model(train_x)
-    #     loss = loss_function(out, train_y)
-    #     loss.backward()
-    #     optimizer.step()
-    #     optimizer.zero_grad()
-    #     train_loss.append(loss.item())
-    #
-    #     # 将训练过程的损失值写入文档保存，并在终端打印出来
-    #     with open('log.txt', 'a+') as f:
-    #         f.write('{} - {}\n'.format(i + 1, loss.item()))
-    #     if (i + 1) % 10 == 0:
-    #         print('Epoch: {}, Loss:{:.5f}'.format(i + 1, loss.item()))
-    #
-    # # for test
-    # model = model.eval()  # 转换成测试模式
-    #
-    # # 注意这里用的是全集 模型的输出长度会比原数据少DAYS_FOR_TRAIN 填充使长度相等再作图
-    # dataset_x = dataset_x.reshape(-1, 1, DAYS_FOR_TRAIN)  # (seq_size, batch_size, feature_size)
-    # dataset_x = torch.from_numpy(dataset_x)
-    #
-    # pred_test = model(dataset_x)  # 全量训练集
-    # # 的模型输出 (seq_size, batch_size, output_size)
-    # pred_test = pred_test.view(-1).data.numpy()
-    # pred_test = np.concatenate((np.zeros(DAYS_FOR_TRAIN), pred_test))  # 填充0 使长度相同
-    # assert len(pred_test) == len(df_scaled)
-    # pred_test_scaled = pred_test.reshape(-1, 1)  # 转换为列向量
-    # pred_test_unscaled = scaler.inverse_transform(pred_test_scaled).flatten()  # 反归一化
-    # df_unscaled = scaler.inverse_transform(df_scaled).flatten()
-    # y_data_pred = [f"{y:.1f}" for y in pred_test_unscaled.tolist()]
 
     # 绘制折线图
     line = (
         Line()
         .add_xaxis(xaxis_data=x_data)
         .add_yaxis(
-            series_name="最低价",
+            series_name="预测值",
             y_axis=y_data_min,
             linestyle_opts=opts.LineStyleOpts(width=2),
             itemstyle_opts=opts.ItemStyleOpts(color="#FF8C00"),
@@ -266,20 +193,22 @@ def show_data(request):
             linestyle_opts=opts.LineStyleOpts(width=2),
             itemstyle_opts=opts.ItemStyleOpts(color="#87CEEB"),
         )
-        # .add_yaxis(
-        #     series_name="预测结果",
-        #     y_axis=y_data_pred,
-        #     linestyle_opts=opts.LineStyleOpts(width=2),
-        #     itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
-        # )
+
         .set_global_opts(
             title_opts=opts.TitleOpts(title="价格走势图"),
             xaxis_opts=opts.AxisOpts(type_="time", name="日期"),
             yaxis_opts=opts.AxisOpts(name="价格"),
             tooltip_opts=opts.TooltipOpts(trigger="axis"),
+            axispointer_opts=opts.AxisPointerOpts(type_="cross", label=opts.LabelOpts(formatter="{value}")),
         )
-    )
 
+    )
+    # .add_yaxis(
+    #     series_name="预测结果",
+    #     y_axis=y_data_pred,
+    #     linestyle_opts=opts.LineStyleOpts(width=2),
+    #     itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
+    # )
     # 将图表渲染到 HTML 模板
     context = {"line": line.render_embed()}
     return render(request, "price_echarts.html", context)
@@ -313,7 +242,6 @@ WEATHER_API_KEY = 'SPBVDFMMKeLXB2VYa'
 #     if data.get('results'):
 #         return data['results'][0]['daily']
 #     return []
-#
 
 
 import requests
@@ -374,7 +302,7 @@ def weather(request):
 
 
 # 返回土壤信息,随机森林
-
+# pass
 def random_forest(request):
     # 读取数据
     data = pd.read_csv(r"C:\Users\smile\Desktop\django_-crop\media\data\Crop_recommendation.csv")
@@ -438,15 +366,229 @@ def random_forest(request):
     })
 
 
+from pyecharts import options as opts
+from pyecharts.charts import Tree
+import os
+
+# 读取 DOT 文件
+with open(os.path.join(BASE_DIR, 'tools/tree.dot'), 'r') as f:
+    dot_data = f.read()
+
+# 将 DOT 文件转换为 Pyecharts 中的 Tree 对象
+tree = Tree()
+tree.add("", [], label_opts=opts.LabelOpts(font_size=14))
+tree = tree.load_javascript()
+
+# 将 DOT 数据转换为 JSON 格式
+graph = pydot.graph_from_dot_data(dot_data)[0].to_string()
+
+
+# 放弃，决策树太庞大
+def show_decision_tree(request):
+    # 读取 DOT 文件并转换为 PyDot 对象
+    with open(os.path.join(BASE_DIR, 'tools/tree.dot'), 'r') as f:
+        dot_data = f.read()
+    graph = pydot.graph_from_dot_data(dot_data)[0]
+
+    # 创建 Pyecharts 中的 Tree 对象
+    tree = Tree()
+    tree.add("", [], label_opts=opts.LabelOpts(font_size=14))
+
+    # 遍历 DOT 对象并添加节点和边
+    for node in graph.get_node_list():
+        name = node.get_name()
+        if 'parent' in node.obj_dict:
+            parent = node.obj_dict['parent']
+        else:
+            parent = None
+        if 'label' in node.obj_dict['attributes']:
+            label = node.obj_dict['attributes']['label']
+        else:
+            label = None
+        if parent:
+            parent_name = parent[0].obj_dict['name']
+            tree.add(name, [parent_name],
+                     symbol='rect', symbol_size=[100, 30],
+                     label_opts=opts.LabelOpts(font_size=14))
+        else:
+            tree.add(name, [],
+                     symbol='rect', symbol_size=[100, 30],
+                     label_opts=opts.LabelOpts(font_size=14))
+
+    # 将图形数据转换为 JSON 格式
+    json_data = tree.dump_options_with_quotes()
+    # print(json_data)
+    # 将图形数据和决策树字符串传递给前端页面
+    return render(request, 'decision_tree.html', {
+        'tree_data': json_data,
+        'dot_data': dot_data,
+    })
+
+
+# data = pd.read_csv(os.path.join(BASE_DIR, 'media/data/Crop_recommendation.csv'))
+def show_charts(request):
+    # 读取csv文件并打乱数据
+    data = pd.read_csv(os.path.join(BASE_DIR, 'media/data/Crop_recommendation.csv'))
+    data = data.sample(frac=1, random_state=42).reset_index(drop=True)
+
+    # 划分数据集为训练集和测试集
+    X = data.iloc[:, :-1].values
+    y = data.iloc[:, -1].values
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # 对数据进行标准化处理
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+
+    # 使用sklearn的决策树模型进行训练
+    clf = DecisionTreeClassifier()
+    clf.fit(X_train, y_train)
+
+    # 在测试集上进行预测并计算准确率
+    y_pred = clf.predict(X_test)
+    accuracy = np.mean(y_pred == y_test)
+    test_accuracy = '测试集上的正确率: {:.2f}%'.format(accuracy * 100)
+
+    # 绘制决策树
+    fig, ax = plt.subplots(figsize=(20, 10))
+    plot_tree(clf, filled=True, feature_names=data.columns[:-1], ax=ax)
+    # 将绘制好的图形转换为base64编码，以便在模板中显示
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_base64 = base64.b64encode(buffer.getvalue()).decode()
+    plt.close()
+
+    # 按照不同种类的作物进行分组，并统计每组中pH值的平均值
+    grouped_data = data.groupby('label')['ph'].mean()
+
+    # 绘制柱状图
+    bar_chart = (
+        Bar()
+        .add_xaxis(list(grouped_data.index))
+        .add_yaxis("pH (mean)", list(grouped_data.values))
+        .set_global_opts(
+            xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=30, font_size=12)),
+            title_opts=opts.TitleOpts(title="各作物类型的平均 pH 值", subtitle="", pos_left='center', pos_top='top',
+                                      padding=20)
+        )
+        .set_series_opts(
+            label_opts=opts.LabelOpts(position="top", font_size=12)
+        )
+        .render()
+    )
+    # 将绘制好的图形转换为 base64 编码，以便在模板中显示
+    bar_base64 = base64.b64encode(bytes(bar_chart, 'utf-8')).decode()
+
+    # 可视化每个特征的分布
+    fig, ax = plt.subplots()
+    sns.histplot(data=data, x="N", hue="label", element="step", kde=True, ax=ax)
+    ax.set(title="Distribution of N")
+    buffer1 = io.BytesIO()
+    fig.savefig(buffer1, format='png')
+    buffer1.seek(0)
+    image1_base64 = base64.b64encode(buffer1.getvalue()).decode()
+    plt.close()
+
+    fig, ax = plt.subplots()
+    sns.histplot(data=data, x="P", hue="label", element="step", kde=True, ax=ax)
+    ax.set(title="Distribution of P")
+    buffer2 = io.BytesIO()
+    fig.savefig(buffer2, format='png')
+    buffer2.seek(0)
+    image2_base64 = base64.b64encode(buffer2.getvalue()).decode()
+    plt.close()
+
+    fig, ax = plt.subplots()
+    sns.histplot(data=data, x="K", hue="label", element="step", kde=True, ax=ax)
+    ax.set(title="Distribution of K")
+    buffer3 = io.BytesIO()
+    fig.savefig(buffer3, format='png')
+    buffer3.seek(0)
+    image3_base64 = base64.b64encode(buffer3.getvalue()).decode()
+    plt.close()  # 绘制箱线图
+    box_data = [data[data['label'] == i]['rainfall'] for i in sorted(data['label'].unique())]
+    box_labels = sorted(data['label'].unique())
+    boxplot = (
+        Boxplot()
+        .add_xaxis(box_labels)
+        .add_yaxis("Rainfall", box_data)
+        .set_global_opts(
+            xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=30, font_size=12)),
+            title_opts=opts.TitleOpts(title="Rainfall Distribution by Crop Type", subtitle="", pos_left='center',
+                                      pos_top='top', padding=20)
+        )
+        .set_series_opts(
+            label_opts=opts.LabelOpts(position="top", font_size=12),
+            box_gap=20
+        )
+        .render_embed()
+    )
+
+    return render(request, 'charts.html', {'image_base64': image_base64,
+                                           'bar_chart': mark_safe(bar_base64),
+                                           'image1_base64': image1_base64,
+                                           'image2_base64': image2_base64,
+                                           'image3_base64': image3_base64,
+                                           'boxplot': boxplot,
+                                           'test_accuracy': test_accuracy})
+
+
+
+import pymysql
+from pyecharts.charts import Map
+from pyecharts import options as opts
+from django.http import JsonResponse
+import pymysql
+from django.http import JsonResponse
+from pyecharts import options as opts
+from pyecharts.charts import Map
+
+
+# 引入 pyecharts 组件
+from pyecharts.charts import Map
+from pyecharts import options as opts
+
 def country_map(request):
-    return render(request, 'country_map.html')
+    # 连接 MySQL 数据库
+    conn = pymysql.connect(
+        host="localhost",
+        user="root",
+        password="123456",
+        db="crop",
+        port=3306,
+        charset="utf8"
+    )
+    cursor = conn.cursor()
+
+    # 从数据库中获取农作物数据
+    cursor.execute("SELECT province, crop, price FROM strawberry_data")
+    data = cursor.fetchall()
+
+    # 将数据处理成 pyecharts 中需要的格式
+    provinces = [x[0] for x in data]
+    values = [x[2] for x in data]
+    map_data = list(zip(provinces, values))
+
+    # 使用 pyecharts 渲染中国地图
+    map_chart = (
+        Map()
+        .add("草莓价格", map_data, "china")
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title="中国草莓价格"),
+            visualmap_opts=opts.VisualMapOpts(max_=20),
+        )
+    )
+
+    # 将生成的 HTML 文件返回给用户
+    return HttpResponse(map_chart.render_embed())
 
 
 '''
 tool
 功能函数
 '''
-import numpy as np
 
 
 # 加载视觉识别模型
