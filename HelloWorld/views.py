@@ -18,7 +18,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-
+from django.contrib.auth import logout
 
 # 登陆
 def login(request):
@@ -29,6 +29,7 @@ def login(request):
     try:
         admin = Admin.objects.filter(username=username).first()
         if admin.password == password:
+            request.session["info"]={'username':admin.username,'password':admin.password}
             return redirect('/overview/')
     except Admin.DoesNotExist:
         pass
@@ -43,14 +44,25 @@ def register(request):
     # 获取输入的数据
     usn = request.POST.get("username")
     psw = request.POST.get("password")
+    if Admin.objects.filter(username=usn).exists():
+        return render(request, 'sign_up.html', {'error': '该用户名已存在，请重新注册。'})
     # 连接数据库
     Admin.objects.create(username=usn, password=psw)
     # 添加完成，返回给管理用户网页
     return redirect('/sign_in/')
 
+#退出登录
+def logout_view(request):
+    if 'info' in request.session:
+        del request.session['info']
+    # 返回到登陆页面
+    return redirect('/sign_in/')
 
 # 主界面
 def overview(request):
+    # info=request.session.get("info")
+    # if not info:
+    #     return redirect('/sign_in/')
     return render(request, 'overview.html')
 
 

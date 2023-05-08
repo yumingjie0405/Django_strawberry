@@ -32,6 +32,10 @@
                 <a class="dropdown-item" href="/homepage/">主页</a>
                 <a class="dropdown-item" href="/about/">关于我们</a>
                 <a class="dropdown-item" href="/sign_in/">登录</a>
+                  <form action="/logout/" method="post" >
+                      {% csrf_token %}
+                      <button type="submit" class="dropdown-item" style="cursor:pointer">退出</button>
+                  </form>
                 <a class="dropdown-item" href="/contact/">联系</a>
               </div>
             </li>
@@ -50,7 +54,7 @@
               <a class="nav-link nav-link-icon" href="https://dribbble.com/webpixels" target="_blank"><i class="fab fa-dribbble"></i><span class="ml-2 d-lg-none">Dribbble</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-link-icon" href="https://github.com/webpixels" target="_blank"><i class="fab fa-github"></i><span class="ml-2 d-lg-none">Github</span></a>
+              <a class="nav-link nav-link-icon" href="https://gitee.com/yumingjie0405/django_-crop" target="_blank"><i class="fab fa-github"></i><span class="ml-2 d-lg-none">Github</span></a>
             </li>
           </ul>
         </div>

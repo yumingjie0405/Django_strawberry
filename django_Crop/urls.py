@@ -22,6 +22,7 @@ from HelloWorld.routing import websocket_urlpatterns
 urlpatterns = [
     path('sign_in/', views.login,name='sign_in'),
     path('sign_up/', views.register,name='sign_up'),
+    path('logout/', views.logout_view),
     path('overview/', views.overview),
     path('homepage/', views.homepage),
     path('about/', views.about),
