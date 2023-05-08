@@ -3,100 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>天气信息</title>
-        <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
-        <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
-        <link type="text/css" href="../static/css/demo.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/echarts.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/echarts.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/extension/bmap.min.js"></script>
-    	<link rel="stylesheet" type="text/css" href="../static/css/admin.css"/>
-        <style>
-            .chart-container {
-                display: flex;
-                justify-content: center;
-            }
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
+    <link type="text/css" href="../static/css/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/echarts.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.1/dist/extension/bmap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/admin.css"/>
+    <style>
+        .chart-container {
+            display: flex;
+            justify-content: center;
+        }
 
-            /* Sidebar navigation */
-            .sidebar {
-                height: 100%;
-                width: 200px;
-                position: fixed;
-                top: 0;
-                left: 0;
-                background-color: #222;
-                overflow-x: hidden;
-                padding-top: 20px;
-            }
+        /* Sidebar navigation */
+        .sidebar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #222;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
 
-            .sidebar ul {
-                padding-left: 0;
-                margin-top: 20px;
-            }
+        .sidebar ul {
+            padding-left: 0;
+            margin-top: 20px;
+        }
 
-            .sidebar li {
-                list-style: none;
-                margin-bottom: 10px;
-            }
+        .sidebar li {
+            list-style: none;
+            margin-bottom: 10px;
+        }
 
-            .sidebar a {
-                display: block;
-                color: #f1f1f1;
-                text-decoration: none;
-                padding: 10px;
-                padding-left: 20%;
+        .sidebar a {
+            display: block;
+            color: #f1f1f1;
+            text-decoration: none;
+            padding: 10px;
+            padding-left: 20%;
 
-            }
+        }
 
-            .sidebar a:hover {
-                color: #fff;
-                background-color: #333;
-            }
+        .sidebar a:hover {
+            color: #fff;
+            background-color: #333;
+        }
 
-            .sidebar-divider {
-                border-top: 1px solid #444;
-                margin: 10px 0;
-            }
+        .sidebar-divider {
+            border-top: 1px solid #444;
+            margin: 10px 0;
+        }
 
-            /* Main content */
-            .main {
-                margin-left: 250px;
-                padding: 20px;
-            }
+        /* Main content */
+        .main {
+            margin-left: 250px;
+            padding: 20px;
+        }
 
-            .background {
-            {#background-image: url("your-image.jpg");#} background-size: cover;
-                height: 100vh;
-                width: 100vw;
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: -1;
-            }
+        .background {
+        {#background-image: url("your-image.jpg");#} background-size: cover;
+            height: 100vh;
+            width: 100vw;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
 
-            /* Typography */
+        /* Typography */
 
 
-            h1, h2, h3, h4, h5, h6 {
-                font-family: "Helvetica Neue", sans-serif;
-                font-weight: bold;
-                color: #111;
-            }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Helvetica Neue", sans-serif;
+            font-weight: bold;
+            color: #111;
+        }
 
-            h1 {
-                font-size: 36px;
-                margin-top: 0;
-            }
+        h1 {
+            font-size: 36px;
+            margin-top: 0;
+        }
 
-            h2 {
-                font-size: 24px;
-                margin-top: 0;
-            }
+        h2 {
+            font-size: 24px;
+            margin-top: 0;
+        }
 
-            p {
-                margin-top: 0;
-            }
+        p {
+            margin-top: 0;
+        }
 
-        </style>
+    </style>
 </head>
 <body>
 <div class="main-layout" id='main-layout'>
@@ -127,7 +127,7 @@
 
             <!-- Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'soil' %}">
+                <a class="nav-link" href="{% url 'charts' %}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>土壤盐碱</span>
                 </a>
@@ -148,71 +148,79 @@
     <!--右侧内容-->
     <div class="main-layout-container">
         <!--主体内容-->
-    <div id="chart" style="width: 800px; height: 400px; margin-left: 15%"></div>
+        <div id="chart" style="width: 800px; height: 400px; margin-left: 15%"></div>
         <!--遮罩-->
         <div class="main-mask"></div>
     </div>
 </div>
-		<script src="../static/js/common.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../static/js/main.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        var chart = echarts.init(document.getElementById('chart'));
+<br>
+<br>
+<div style="display: flex; justify-content: center;">
+    <div id="chart" style="width: 600px; height: 400px;"></div>
+</div>
 
-        // 获取数据
-        var dates = JSON.parse('{{ dates|safe }}');
-        var high_temps = JSON.parse('{{ high_temps|safe }}');
-        var low_temps = JSON.parse('{{ low_temps|safe }}');
+<script src="../static/js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../static/js/main.js" type="text/javascript" charset="utf-8"></script>
 
-        // 配置选项
-        var option = {
-            title: {
-                text: '未来14天天气趋势'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['最高温度','最低温度']
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: dates
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter: '{value} °C'
+<script>
+    var chart = echarts.init(document.getElementById('chart'));
+
+    // 获取数据
+    var dates = JSON.parse('{{ dates|safe }}');
+    var high_temps = JSON.parse('{{ high_temps|safe }}');
+    var low_temps = JSON.parse('{{ low_temps|safe }}');
+
+    // 配置选项
+    var option = {
+        title: {
+            text: '未来14天天气趋势'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['最高温度', '最低温度']
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: dates
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} °C'
+            }
+        },
+        series: [
+            {
+                name: '最高温度',
+                type: 'line',
+                data: high_temps,
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
                 }
             },
-            series: [
-                {
-                    name:'最高温度',
-                    type:'line',
-                    data: high_temps,
-                    markPoint: {
-                        data: [
-                            {type: 'max', name: '最大值'},
-                            {type: 'min', name: '最小值'}
-                        ]
-                    }
-                },
-                {
-                    name:'最低温度',
-                    type:'line',
-                    data: low_temps,
-                    markPoint: {
-                        data: [
-                            {type: 'max', name: '最大值'},
-                            {type: 'min', name: '最小值'}
-                        ]
-                    }
+            {
+                name: '最低温度',
+                type: 'line',
+                data: low_temps,
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
                 }
-            ]
-        };
+            }
+        ]
+    };
 
-        // 使用刚指定的配置项和数据显示图表。
-        chart.setOption(option);
-    </script>
+    // 使用刚指定的配置项和数据显示图表。
+    chart.setOption(option);
+</script>
+
 </body>
 </html>
