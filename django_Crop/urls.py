@@ -22,12 +22,12 @@ from HelloWorld.routing import websocket_urlpatterns
 urlpatterns = [
     path('sign_in/', views.login,name='sign_in'),
     path('sign_up/', views.register,name='sign_up'),
-    path('overview/', views.overview),
+    path('logout/', views.logout_view),
+    path('overview/', views.overview,name='overview'),
     path('homepage/', views.homepage),
     path('about/', views.about),
     path('contact/', views.contact),
     # 视觉识别板块
-    # path('Vision/', views.show_vision_predict),
     path('predict/', views.predict, name='predict'),
 
     # 价格预测板块
@@ -43,8 +43,9 @@ urlpatterns = [
     # path('table/', views.table, name='table'),
     path('weather/', views.weather, name='weather'),
     # path('soil/', views.random_forest, name='soil'),
-    path('soil/', views.show_decision_tree, name='soil'),
+    path('charts/', views.show_charts, name='charts'),
     path('china_map/', views.country_map, name='china_map'),
+
 
 ]
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Charts</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, p {
+            text-align: center;
+        }
+
+        img {
+            margin: 20px 0;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<h1>决策树模型测试集准确率</h1>
+<p>{{ test_accuracy }}</p>
+
+<h1>决策树展示</h1>
+<img src="data:image/png;base64,{{ image_base64 }}"/>
+
+<h1>Distribution of 氮（N）</h1>
+<img src="data:image/png;base64,{{ image1_base64 }}"/>
+
+<h1>Distribution of 磷（P）</h1>
+<img src="data:image/png;base64,{{ image2_base64 }}"/>
+
+<h1>Distribution of 钾（K）</h1>
+<img src="data:image/png;base64,{{ image3_base64 }}"/>
+</body>
+</html>

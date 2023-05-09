@@ -57,7 +57,7 @@ AUTH_MIDDLEWARE_EXCLUDE = [
     '/sign_up/',
 ]
 ROOT_URLCONF = 'django_Crop.urls'
-SESSION_COOKIE_AGE = 3600
+# SESSION_COOKIE_AGE = 3600
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

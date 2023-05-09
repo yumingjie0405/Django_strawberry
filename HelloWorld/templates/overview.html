@@ -13,6 +13,11 @@
     <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../static/css/demo.css" rel="stylesheet">
+    <style>
+        .bg-primary{
+            background-color: #00a148!important
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-dark bg-dark py-4">
@@ -35,6 +40,10 @@
                         <a class="dropdown-item" href="/homepage/">主页</a>
                         <a class="dropdown-item" href="/about/">关于我们</a>
                         <a class="dropdown-item" href=" /sign_in/">登录</a>
+                        <form  action="/logout/" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item" style="cursor:pointer">退出</button>
+                        </form>
                         <a class="dropdown-item" href="/contact/">联系</a>
                     </div>
                 </li>
@@ -56,8 +65,8 @@
                             class="fab fa-dribbble"></i><span class="ml-2 d-lg-none">Dribbble</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-link-icon" href="https://github.com/webpixels" target="_blank"><i
-                            class="fab fa-github"></i><span class="ml-2 d-lg-none">Github</span></a>
+                    <a class="nav-link nav-link-icon" href="https://gitee.com/yumingjie0405/django_-crop" target="_blank"><i
+                            class="fab fa-github"></i><span class="ml-2 d-lg-none">Gitee</span></a>
                 </li>
             </ul>
         </div>
@@ -65,15 +74,15 @@
 </nav>
 <main class="main">
     <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="background-image: url('/HelloWorld/static/images/backgrounds/img-1.jpg')">
-        <span class="mask bg-primary alpha-7"></span>
+             style="background-image: url('/HelloWorld/static/images/backgrounds/crop.jpg')">
+        <span class="mask bg-primary alpha-7" ></span>
         <div class="spotlight-holder py-lg pt-lg-xl">
             <div class="container d-flex align-items-center no-padding">
                 <div class="col">
                     <div class="row cols-xs-space align-items-center text-center text-md-left justify-content-center">
                         <div class="col-7">
                             <div class="text-center mt-5">
-                                <img src="../static/images/brand/icon.png" style="width: 200px;"
+                                <img src="../static/images/brand/warm.jpg" style="width: 100px;height: 100px"
                                      class="img-fluid animated" data-animation-in="jackInTheBox"
                                      data-animation-delay="1000" alt="">
                                 <h2 class="heading display-4 font-weight-400 text-white mt-5 animated"
@@ -90,7 +99,7 @@
     <section class="slice slice-lg">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-10">
+                <div class="col-lg-10" >
                     <!-- Typography -->
                     <div class="row align-items-center mb-5">
                         <div class="col-8">
@@ -103,7 +112,7 @@
                     <div class="row typeface-palette cols-xs-space cols-sm-space cols-md-space">
                         <div class="col-sm-4">
                             <a href="/predict/">
-                                <div class="typeface-entry">
+                                <div class="typeface-entry" style="border-color: black;height: 350px">
 
                                     {# <span class="badge badge-md typeface-badge badge-pill bg-primary text-white">Regular</span>#}
                                     <img class="heading display-3 font-weight-400 text-dark"
@@ -118,7 +127,7 @@
                         <div class="col-sm-4">
 
                             <a href="/chat/">
-                                <div class="typeface-entry">
+                                <div class="typeface-entry" style="border-color: black;height: 350px">
                                     {#                      <span class="badge badge-md typeface-badge badge-pill bg-primary text-white">Semi-bold</span>#}
                                     <img class="heading display-3 font-weight-400 text-dark"
                                          src="../static/images/backgrounds/crop1.jpeg" style="width:100%;height:auto">
@@ -131,7 +140,7 @@
                         </div>
                         <div class="col-sm-4">
                             <a href="/Price/">
-                                <div class="typeface-entry">
+                                <div class="typeface-entry" style="border-color: black;height: 350px" >
                                     {#                      <span class="badge badge-md typeface-badge badge-pill bg-primary text-white">Bold</span>#}
                                     <img class="heading display-3 font-weight-400 text-dark" src="../static/images/backgrounds/crop3.jpg" style="width:100%;height:auto">
                                     <h3 style="margin-top: 20px">农作物价格预测</h3>

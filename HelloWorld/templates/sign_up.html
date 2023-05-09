@@ -12,6 +12,11 @@
     <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../static/css/demo.css" rel="stylesheet">
+      <style>
+          .bg-primary {
+              background-color: #00a148 !important
+          }
+      </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-transparent navbar-dark bg-dark py-4">
@@ -50,7 +55,7 @@
               <a class="nav-link nav-link-icon" href="https://dribbble.com/webpixels" target="_blank"><i class="fab fa-dribbble"></i><span class="ml-2 d-lg-none">Dribbble</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-link-icon" href="https://github.com/webpixels" target="_blank"><i class="fab fa-github"></i><span class="ml-2 d-lg-none">Github</span></a>
+              <a class="nav-link nav-link-icon" href="https://gitee.com/yumingjie0405/django_-crop" target="_blank"><i class="fab fa-github"></i><span class="ml-2 d-lg-none">Github</span></a>
             </li>
           </ul>
         </div>
@@ -72,13 +77,14 @@
                     <img src="../static/images/brand/icon.png" style="width: 50px;" alt="">
                     <h4 class="heading h3 text-white pt-3 pb-5">
                       请注册你的账号.</h4>
+                      <span style="color: red">{{ error }}</span>
                 <form class="form-primary" method="post">
                     {% csrf_token %}
                   <div class="form-group">
-                    <input type="text" class="form-control" id="username" placeholder="你的账号" name="username">
+                    <input type="text" class="form-control" id="username" placeholder="你的账号" name="username" style="background-color:#00a148 ">
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control" id="password" placeholder="密码" name="password">
+                    <input type="password" class="form-control" id="password" placeholder="密码" name="password" style="background-color:#00a148 ">
                   </div>
                   <button id="sub" type="submit"  class="btn btn-block btn-lg bg-white mt-4" onclick="return test()">确认</button>
                 </form>
