@@ -40,6 +40,7 @@ def login(request):
     try:
         admin = Admin.objects.filter(username=username).first()
         if admin.password == password:
+            request.session["info"] = {'username': admin.username, 'password': admin.password}
             return redirect('/overview/')
     except Admin.DoesNotExist:
         pass
@@ -54,9 +55,19 @@ def register(request):
     # 获取输入的数据
     usn = request.POST.get("username")
     psw = request.POST.get("password")
+    if Admin.objects.filter(username=usn).exists():
+        return render(request, 'sign_up.html', {'error': '该用户名已存在，请重新注册。'})
     # 连接数据库
     Admin.objects.create(username=usn, password=psw)
     # 添加完成，返回给管理用户网页
+    return redirect('/sign_in/')
+
+
+# 退出登录
+def logout_view(request):
+    if 'info' in request.session:
+        del request.session['info']
+    # 返回到登陆页面
     return redirect('/sign_in/')
 
 
@@ -284,7 +295,7 @@ def weather(request):
     url = 'https://api.qweather.com/v7/weather/30d?location=101010100&key=f2d15caf06324b04b8d78388b0f5754f'
     response = requests.get(url)
     data = json.loads(response.content.decode())
-
+    print(data)
     # 从返回数据中提取最高和最低温度
     dates = []
     high_temps = []
@@ -297,7 +308,6 @@ def weather(request):
     # 将数据传递给模板
     context = {'dates': json.dumps(dates), 'high_temps': json.dumps(high_temps),
                'low_temps': json.dumps(low_temps)}
-
     return render(request, 'weather.html', context)
 
 
@@ -535,7 +545,6 @@ def show_charts(request):
                                            'test_accuracy': test_accuracy})
 
 
-
 import pymysql
 from pyecharts.charts import Map
 from pyecharts import options as opts
@@ -544,11 +553,11 @@ import pymysql
 from django.http import JsonResponse
 from pyecharts import options as opts
 from pyecharts.charts import Map
-
 
 # 引入 pyecharts 组件
 from pyecharts.charts import Map
 from pyecharts import options as opts
+
 
 def country_map(request):
     # 连接 MySQL 数据库
@@ -580,9 +589,9 @@ def country_map(request):
             visualmap_opts=opts.VisualMapOpts(max_=20),
         )
     )
-
+    map_html = map_chart.render_embed()
     # 将生成的 HTML 文件返回给用户
-    return HttpResponse(map_chart.render_embed())
+    return render(request, 'chinamap.html', {'map_html': map_html})
 
 
 '''

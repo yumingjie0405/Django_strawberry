@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>天气信息</title>
+    <title>Awesome-pyecharts</title>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
     <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
     <link type="text/css" href="../static/css/demo.css" rel="stylesheet">
@@ -153,81 +154,13 @@
         </ul>
     </div>
     <!--右侧内容-->
-    <div class="main-layout-container">
+    <div class="main-layout-container" style="margin-left: 10%;background-color: white">
         <!--主体内容-->
-        <div id="chart" style="width: 800px; height: 400px; margin-left: 15%"></div>
+        {{ map_html|safe }}
         <!--遮罩-->
         <div class="main-mask"></div>
     </div>
 </div>
-<br>
-<br>
-<div style="display: flex; justify-content: center;">
-    <div id="chart" style="width: 600px; height: 400px;"></div>
-</div>
-
-<script src="../static/js/common.js" type="text/javascript" charset="utf-8"></script>
-<script src="../static/js/main.js" type="text/javascript" charset="utf-8"></script>
-
-<script>
-    var chart = echarts.init(document.getElementById('chart'));
-
-    // 获取数据
-    var dates = JSON.parse('{{ dates|safe }}');
-    var high_temps = JSON.parse('{{ high_temps|safe }}');
-    var low_temps = JSON.parse('{{ low_temps|safe }}');
-
-    // 配置选项
-    var option = {
-        title: {
-            text: '未来14天天气趋势'
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            data: ['最高温度', '最低温度']
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: dates
-        },
-        yAxis: {
-            type: 'value',
-            axisLabel: {
-                formatter: '{value} °C'
-            }
-        },
-        series: [
-            {
-                name: '最高温度',
-                type: 'line',
-                data: high_temps,
-                markPoint: {
-                    data: [
-                        {type: 'max', name: '最大值'},
-                        {type: 'min', name: '最小值'}
-                    ]
-                }
-            },
-            {
-                name: '最低温度',
-                type: 'line',
-                data: low_temps,
-                markPoint: {
-                    data: [
-                        {type: 'max', name: '最大值'},
-                        {type: 'min', name: '最小值'}
-                    ]
-                }
-            }
-        ]
-    };
-
-    // 使用刚指定的配置项和数据显示图表。
-    chart.setOption(option);
-</script>
 
 </body>
 </html>

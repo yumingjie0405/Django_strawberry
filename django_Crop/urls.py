@@ -23,7 +23,7 @@ urlpatterns = [
     path('sign_in/', views.login,name='sign_in'),
     path('sign_up/', views.register,name='sign_up'),
     path('logout/', views.logout_view),
-    path('overview/', views.overview),
+    path('overview/', views.overview,name='overview'),
     path('homepage/', views.homepage),
     path('about/', views.about),
     path('contact/', views.contact),
@@ -45,6 +45,7 @@ urlpatterns = [
     # path('soil/', views.random_forest, name='soil'),
     path('charts/', views.show_charts, name='charts'),
     path('china_map/', views.country_map, name='china_map'),
+
 
 ]
 
