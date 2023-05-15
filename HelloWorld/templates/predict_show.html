@@ -44,9 +44,9 @@
             <button class="btn btn-primary" id="btn-toggle-camera" style="background-color: forestgreen">摄像头</button>
         </div>
     </form>
-    <div>
-        <video id="video" style="width: 100%;height: 400px"></video>
-    </div>
+{#    <div>#}
+{#        <video id="video" style="width: 100%;height: 400px"></video>#}
+{#    </div>#}
 
 
     <div id="result-container" style="display: none;">
@@ -113,35 +113,6 @@
         });
     });
 </script>
-     <script>
-        var btnToggleCamera = document.getElementById('btn-toggle-camera');
-        var video = document.getElementById('video');
-        var stream = null;
-        var isCameraOn = false;
-        btnToggleCamera.onclick = function() {
-            if (!isCameraOn) {
-                navigator.mediaDevices.getUserMedia({video: true})
-                    .then(function(s) {
-                        stream = s;
-                        video.srcObject = stream;
-                        video.play();
-                        btnToggleCamera.innerHTML = '关闭摄像头';
-                        isCameraOn = true;
-                    })
-                    .catch(function(error) {
-                        console.log('Error:', error);
-                    });
-            } else {
-                if (stream) {
-                    stream.getTracks().forEach(function(track) {
-                        track.stop();
-                    });
-                    video.srcObject = null;
-                    btnToggleCamera.innerHTML = '开启摄像头';
-                    isCameraOn = false;
-                }
-            }
-        };
-    </script>
+
 </body>
 </html>

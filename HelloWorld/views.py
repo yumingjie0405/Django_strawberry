@@ -214,12 +214,6 @@ def show_data(request):
         )
 
     )
-    # .add_yaxis(
-    #     series_name="预测结果",
-    #     y_axis=y_data_pred,
-    #     linestyle_opts=opts.LineStyleOpts(width=2),
-    #     itemstyle_opts=opts.ItemStyleOpts(color="#FF0000"),
-    # )
     # 将图表渲染到 HTML 模板
     context = {"line": line.render_embed()}
     return render(request, "price_echarts.html", context)

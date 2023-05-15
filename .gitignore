@@ -1,3 +1,7 @@
 .idea
 .demo
 HelloWorld/__init__.py
+HelloWorld/__pycache__
+HelloWorld/middleware/__pycache__
+HelloWorld/migrations/__pycache__
+django/__pycache__
