@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from HelloWorld import views, consumers
 from HelloWorld.routing import websocket_urlpatterns
@@ -45,7 +45,8 @@ urlpatterns = [
     # path('soil/', views.random_forest, name='soil'),
     path('charts/', views.show_charts, name='charts'),
     path('china_map/', views.country_map, name='china_map'),
-
+    path('video/', include('HelloWorld.urls')),
+    path('admin/', admin.site.urls),
 
 ]
 

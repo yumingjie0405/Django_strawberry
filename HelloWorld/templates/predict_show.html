@@ -41,7 +41,7 @@
         </div>
         <div  style="flex: 1;">
             <button type="submit" class="btn btn-primary" id="predict-btn" style="background-color: forestgreen">预测</button>
-            <button class="btn btn-primary" id="btn-toggle-camera" style="background-color: forestgreen">摄像头</button>
+            <a class="btn btn-primary" id="btn-toggle-camera" style="background-color: forestgreen" href="http://127.0.0.1:8000/video/wms/">摄像头</a>
         </div>
     </form>
 {#    <div>#}
@@ -81,6 +81,7 @@
                     var results = response.class;
                     var resultTable = '';
 
+                    var class_names;
                     for (var i = 0; i < results.length; i++) {
                         class_names = {
                             0: '豆角角斑病',

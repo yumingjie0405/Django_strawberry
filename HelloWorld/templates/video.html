@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video</title>
+</head>
+<body>
+    <h1 style="margin-left: 40%">实时检测</h1>
+    <div style="margin-left: 20%">
+        <img id="videoElement" src="" alt="">
+    </div>
+
+    <script>
+        const videoElement = document.getElementById('videoElement');
+        // 创建 WebSocket 连接
+        const ws = new WebSocket('ws://127.0.0.1:8000/ws/video/wms/');
+        const updateInterval = 100;  // 100 毫秒，即每秒刷新 10 次
+        // 监听 WebSocket 连接打开事件
+        ws.onopen = function () {
+            console.log('WebSocket connection established.');
+        };
+        // 监听 WebSocket 接收消息事件
+        ws.onmessage = function (event) {
+            // 解析接收到的消息
+            const data = JSON.parse(event.data);
+            // 在视频元素中显示实时图像
+            videoElement.src = data.message;
+        };
+        // 监听 WebSocket 连接关闭事件
+        ws.onclose = function () {
+            console.log('WebSocket connection closed.');
+        };
+    </script>
+</body>
+</html>
