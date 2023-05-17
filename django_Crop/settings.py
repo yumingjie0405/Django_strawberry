@@ -30,17 +30,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Application definition
 
 INSTALLED_APPS = [
+    'HelloWorld',
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'HelloWorld',
-    'channels',
+
 ]
 
-ASGI_APPLICATION = 'HelloWorld.routing.application'
+ASGI_APPLICATION = "django_Crop.asgi.application"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,14 +78,14 @@ TEMPLATES = [
     },
 ]
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-        "CONFIG": {
-            "capacity": 1000,
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer",
+#         "CONFIG": {
+#             "capacity": 1000,
+#         },
+#     },
+# }
 
 WSGI_APPLICATION = 'django_Crop.wsgi.application'
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -139,3 +141,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [("127.0.0.1", 6379)],
+        },
+    },
+}

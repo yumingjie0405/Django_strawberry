@@ -656,3 +656,12 @@ def create_dataset(data, days_for_train=5) -> (np.array, np.array):
         dataset_x.append(_x)
         dataset_y.append(data[i + days_for_train])
     return (np.array(dataset_x), np.array(dataset_y))
+#流式图像
+def index(request):
+    return render(request, 'index.html')
+
+
+def v_name(request, v_name):
+    return render(request, 'video.html', {
+        'v_name': v_name
+    })
