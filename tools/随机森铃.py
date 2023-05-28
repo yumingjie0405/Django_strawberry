@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
-from 作物预测.ensemble import RandomForestClassifier
-from 作物预测.model_selection import train_test_split
-from 作物预测.metrics import accuracy_score
+from sklearn.tree import export_graphviz
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -42,7 +43,6 @@ sns.barplot(x=importances[indices], y=X.columns[indices])
 plt.show()
 
 # 可视化单棵决策树
-from 作物预测.tree import export_graphviz
 import pydot
 
 tree = rf.estimators_[0]

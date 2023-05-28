@@ -14,7 +14,7 @@
         const videoElement = document.getElementById('videoElement');
         // 创建 WebSocket 连接
         const ws = new WebSocket('ws://127.0.0.1:8000/ws/video/wms/');
-        const updateInterval = 100;  // 100 毫秒，即每秒刷新 10 次
+        const updateInterval = 1000;  // 100 毫秒，即每秒刷新 10 次
         // 监听 WebSocket 连接打开事件
         ws.onopen = function () {
             console.log('WebSocket connection established.');

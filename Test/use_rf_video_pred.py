@@ -6,8 +6,8 @@ model = YOLO('../media/model/train16/weights/best.pt')
 # model = YOLO('../media/model/best.pt')
 
 # Open the video file
-video_path = "path/to/your/video/file.mp4"
-cap = cv2.VideoCapture(video_path)
+# video_path = "path/to/your/video/file.mp4"
+cap = cv2.VideoCapture(0)
 
 # Loop through the video frames
 while cap.isOpened():
@@ -16,7 +16,7 @@ while cap.isOpened():
 
     if success:
         # Run YOLOv8 inference on the frame
-        results = model(frame)
+        results = model(frame,conf=0.6)
 
         # Visualize the results on the frame
         annotated_frame = results[0].plot()
@@ -28,7 +28,6 @@ while cap.isOpened():
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
     else:
-        # Break the loop if the end of the video is reached
         break
 
 # Release the video capture object and close the display window

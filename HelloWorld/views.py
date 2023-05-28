@@ -269,7 +269,7 @@ def XINZHI_weather(request):
     dates = []
     high_temps = []
     low_temps = []
-    for item in data['results'][0]['daily'][:14]:
+    for item in data['results'][0]['daily'][:30]:
         dates.append(item['date'])
         high_temps.append(item['high'])
         low_temps.append(item['low'])
@@ -286,7 +286,7 @@ def weather(request):
     # 获取城市名称
 
     # 调用和风天气API获取数据
-    url = 'https://api.qweather.com/v7/weather/30d?location=101010100&key=f2d15caf06324b04b8d78388b0f5754f'
+    url = 'https://api.qweather.com/v7/weather/30d?location=118.63,31.13&key=f2d15caf06324b04b8d78388b0f5754f'
     response = requests.get(url)
     data = json.loads(response.content.decode())
     print(data)
@@ -294,7 +294,7 @@ def weather(request):
     dates = []
     high_temps = []
     low_temps = []
-    for item in data['daily'][:12]:
+    for item in data['daily'][:30]:
         dates.append(item['fxDate'])
         high_temps.append(item['tempMax'])
         low_temps.append(item['tempMin'])

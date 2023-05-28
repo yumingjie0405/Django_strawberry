@@ -14,4 +14,3 @@ class AuthMiddleware(MiddlewareMixin):
             return
         # 没有登陆过就返回登陆页面
         return redirect('/sign_in/')
-        # return HttpResponse('请返回登陆')

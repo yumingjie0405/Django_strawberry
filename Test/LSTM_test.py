@@ -27,15 +27,6 @@ def create_future_input_sequence(dataset, days_for_train, days_for_predict):
 
 
 class LSTM_Regression(nn.Module):
-    """
-        使用LSTM进行回归
-
-        参数：
-        - input_size: feature size
-        - hidden_size: number of hidden units
-        - output_size: number of output
-        - num_layers: layers of LSTM to stack
-    """
 
     def __init__(self, input_size, hidden_size, output_size=1, num_layers=2):
         super().__init__()
