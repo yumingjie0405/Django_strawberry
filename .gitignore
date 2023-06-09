@@ -5,3 +5,5 @@ HelloWorld/__pycache__
 HelloWorld/middleware/__pycache__
 HelloWorld/migrations/__pycache__
 django/__pycache__
+*.o
+*.ali
