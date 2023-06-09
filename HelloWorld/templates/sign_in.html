@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Probably the most complete UI kit out there. Multiple functionalities and controls added,  extended color palette and beautiful typography, designed as its own extended version of Bootstrap at  the highest level of quality.                             ">
+    <meta name="description"
+          content="Probably the most complete UI kit out there. Multiple functionalities and controls added,  extended color palette and beautiful typography, designed as its own extended version of Bootstrap at  the highest level of quality.                             ">
     <meta name="author" content="Webpixels">
     <title>rural revitalization</title>
     <!-- Fonts -->
@@ -12,109 +13,118 @@
     <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../static/css/demo.css" rel="stylesheet">
-      <style>
-          .bg-primary {
-              background-color: #00a148 !important
-          }
-      </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-transparent navbar-dark bg-dark py-4">
-      <div class="container">
+    <style>
+        .bg-primary {
+            background-color: #00a148 !important
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-dark bg-dark py-4">
+    <div class="container">
         <a class="navbar-brand" href=""><strong>乡村</strong> 振兴</a>
-        <button class="navbar-toggler" type="button" data-action="offcanvas-open" data-target="#navbar_main" aria-controls="navbar_main" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-action="offcanvas-open" data-target="#navbar_main"
+                aria-controls="navbar_main" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse offcanvas-collapse" id="navbar_main">
-          <ul class="navbar-nav ml-auto align-items-lg-center">
-            <h6 class="dropdown-header font-weight-600 d-lg-none px-0">Menu</h6>
-            <li class="nav-item ">
-              <a class="nav-link" href="/overview/">概述</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">页面</a>
-              <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_1">
-                <a class="dropdown-item" href="/homepage/">主页</a>
-                <a class="dropdown-item" href="/about/">关于我们</a>
-                <a class="dropdown-item" href="/sign_in/">登录</a>
-                  <form action="/logout/" method="post" >
-                      {% csrf_token %}
-                      <button type="submit" class="dropdown-item" style="cursor:pointer">退出</button>
-                  </form>
-                <a class="dropdown-item" href="/contact/">联系</a>
-              </div>
-            </li>
-{#            <li class="nav-item">#}
-{#              <a class="nav-link" href="../docs/introduction.html">文档</a>#}
-{#            </li>#}
-            <div class="dropdown-divider d-lg-none my-4"></div>
-            <h6 class="dropdown-header font-weight-600 d-lg-none px-0">Social Media</h6>
-            <li class="nav-item">
-              <a class="nav-link nav-link-icon" href="https://instagram.com/webpixelsofficial/" target="_blank"><i class="fab fa-instagram"></i><span class="ml-2 d-lg-none">Instagram</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-link-icon" href="https://web.facebook.com/webpixels" target="_blank"><i class="fab fa-facebook"></i><span class="ml-2 d-lg-none">Facebook</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-link-icon" href="https://dribbble.com/webpixels" target="_blank"><i class="fab fa-dribbble"></i><span class="ml-2 d-lg-none">Dribbble</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-link-icon" href="https://gitee.com/yumingjie0405/django_-crop" target="_blank"><i class="fab fa-github"></i><span class="ml-2 d-lg-none">Github</span></a>
-            </li>
-          </ul>
+            <ul class="navbar-nav ml-auto align-items-lg-center">
+                <h6 class="dropdown-header font-weight-600 d-lg-none px-0">Menu</h6>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/overview/">概述</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">页面</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_1">
+                        <a class="dropdown-item" href="/homepage/">主页</a>
+                        <a class="dropdown-item" href="/about/">关于我们</a>
+                        <a class="dropdown-item" href="/sign_in/">登录</a>
+                        <form action="/logout/" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item" style="cursor:pointer">退出</button>
+                        </form>
+                        <a class="dropdown-item" href="/contact/">联系</a>
+                    </div>
+                </li>
+                {#            <li class="nav-item">#}
+                {#              <a class="nav-link" href="../docs/introduction.html">文档</a>#}
+                {#            </li>#}
+                <div class="dropdown-divider d-lg-none my-4"></div>
+                <h6 class="dropdown-header font-weight-600 d-lg-none px-0">Social Media</h6>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://instagram.com/webpixelsofficial/" target="_blank"><i
+                            class="fab fa-instagram"></i><span class="ml-2 d-lg-none">Instagram</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://web.facebook.com/webpixels" target="_blank"><i
+                            class="fab fa-facebook"></i><span class="ml-2 d-lg-none">Facebook</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://dribbble.com/webpixels" target="_blank"><i
+                            class="fab fa-dribbble"></i><span class="ml-2 d-lg-none">Dribbble</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://gitee.com/yumingjie0405/django_-crop"
+                       target="_blank"><i class="fab fa-github"></i><span class="ml-2 d-lg-none">Github</span></a>
+                </li>
+            </ul>
         </div>
-      </div>
-    </nav>
-    <main class="main">
-      <section class="py-xl bg-cover bg-size--cover" style="background-image: url('/HelloWorld/static/images/backgrounds/img-1.jpg')">
+    </div>
+</nav>
+<main class="main">
+    <section class="py-xl bg-cover bg-size--cover"
+             style="background-image: url('/HelloWorld/static/images/backgrounds/img-1.jpg')">
         <span class="mask bg-primary alpha-6"></span>
         <div class="container d-flex align-items-center no-padding">
-          <div class="col">
-            <div class="row justify-content-center">
-              <div class="col-lg-4">
-                <div class="card bg-primary text-white">
-                  <div class="card-body">
-                    <button type="button" class="btn btn-primary btn-nobg btn-zoom--hover mb-5">
-                      <span class="btn-inner--icon"><i class="fas fa-arrow-left"></i></span>
-                    </button>
-                    <span class="clearfix"></span>
-                    <img src="../static/images/brand/icon.png" style="width: 50px;" alt="">
-                    <h4 class="heading h3 text-white pt-3 pb-5">欢迎回来,<br>
-                      登录你的账户.</h4>
-                    <form class="form-primary" method="post">
-                        {% csrf_token %}
-                      <div class="form-group">
-                        <input type="text" class="form-control"  placeholder="你的账号" name="username" style="background-color:#00a148 ">
-                      </div>
-                      <div class="form-group">
-                        <input type="password" class="form-control"  placeholder="密码" name="password" style="background-color:#00a148 ">
-                      </div>
-                      <div class="text-right mt-4"><a href="/sign_up/" class="text-white">注册</a></div>
-                      <button type="submit" class="btn btn-block btn-lg bg-white mt-4">登录</button>
-                        <span style="color: red">{{ error }}</span>
-                    </form>
+            <div class="col">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary btn-nobg btn-zoom--hover mb-5">
+                                    <span class="btn-inner--icon"><i class="fas fa-arrow-left"></i></span>
+                                </button>
+                                <span class="clearfix"></span>
+                                <img src="../static/images/brand/icon.png" style="width: 50px;" alt="">
+                                <h4 class="heading h3 text-white pt-3 pb-5">欢迎回来,<br>
+                                    登录你的账户.</h4>
+                                <form class="form-primary" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="你的账号" name="username"
+                                               style="background-color:#00a148 ">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" placeholder="密码" name="password"
+                                               style="background-color:#00a148 ">
+                                    </div>
+                                    <div class="text-right mt-4"><a href="/sign_up/" class="text-white">注册</a></div>
+                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4">登录</button>
+                                    <span style="color: red">{{ error }}</span>
+                                </form>
 
-                  </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </section>
-    </main>
-    <!-- Core -->
-    <script src="../static/vendor/jquery/jquery.min.js"></script>
-    <script src="../static/vendor/popper/popper.min.js"></script>
-    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
-    <!-- FontAwesome 5 -->
-    <script src="../static/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
-    <!-- Page plugins -->
-    <script src="../static/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-    <script src="../static/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
-    <script src="../static/vendor/input-mask/input-mask.min.js"></script>
-    <script src="../static/vendor/nouislider/js/nouislider.min.js"></script>
-    <script src="../static/vendor/textarea-autosize/textarea-autosize.min.js"></script>
-    <!-- Theme JS -->
-    <script src="../static/js/theme.js"></script>
-  </body>
+    </section>
+</main>
+<!-- Core -->
+<script src="../static/vendor/jquery/jquery.min.js"></script>
+<script src="../static/vendor/popper/popper.min.js"></script>
+<script src="../static/js/bootstrap/bootstrap.min.js"></script>
+<!-- FontAwesome 5 -->
+<script src="../static/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<!-- Page plugins -->
+<script src="../static/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../static/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../static/vendor/input-mask/input-mask.min.js"></script>
+<script src="../static/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../static/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Theme JS -->
+<script src="../static/js/theme.js"></script>
+</body>
 </html>

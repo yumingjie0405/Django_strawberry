@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 01/05/2023 21:28:02
+ Date: 09/06/2023 15:54:52
 */
 
 SET NAMES utf8mb4;
@@ -270,7 +270,7 @@ CREATE TABLE `auth_group`  (
   `name` varchar(150) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth_group
@@ -289,7 +289,7 @@ CREATE TABLE `auth_group_permissions`  (
   INDEX `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm`(`permission_id`) USING BTREE,
   CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth_group_permissions
@@ -307,7 +307,7 @@ CREATE TABLE `auth_permission`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `auth_permission_content_type_id_codename_01ab375a_uniq`(`content_type_id`, `codename`) USING BTREE,
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth_permission
@@ -344,6 +344,22 @@ INSERT INTO `auth_permission` VALUES (29, 'Can add img', 8, 'add_img');
 INSERT INTO `auth_permission` VALUES (30, 'Can change img', 8, 'change_img');
 INSERT INTO `auth_permission` VALUES (31, 'Can delete img', 8, 'delete_img');
 INSERT INTO `auth_permission` VALUES (32, 'Can view img', 8, 'view_img');
+INSERT INTO `auth_permission` VALUES (33, 'Can add admin', 9, 'add_admin');
+INSERT INTO `auth_permission` VALUES (34, 'Can change admin', 9, 'change_admin');
+INSERT INTO `auth_permission` VALUES (35, 'Can delete admin', 9, 'delete_admin');
+INSERT INTO `auth_permission` VALUES (36, 'Can view admin', 9, 'view_admin');
+INSERT INTO `auth_permission` VALUES (37, 'Can add diseases pests', 10, 'add_diseasespests');
+INSERT INTO `auth_permission` VALUES (38, 'Can change diseases pests', 10, 'change_diseasespests');
+INSERT INTO `auth_permission` VALUES (39, 'Can delete diseases pests', 10, 'delete_diseasespests');
+INSERT INTO `auth_permission` VALUES (40, 'Can view diseases pests', 10, 'view_diseasespests');
+INSERT INTO `auth_permission` VALUES (41, 'Can add question', 11, 'add_question');
+INSERT INTO `auth_permission` VALUES (42, 'Can change question', 11, 'change_question');
+INSERT INTO `auth_permission` VALUES (43, 'Can delete question', 11, 'delete_question');
+INSERT INTO `auth_permission` VALUES (44, 'Can view question', 11, 'view_question');
+INSERT INTO `auth_permission` VALUES (45, 'Can add answer', 12, 'add_answer');
+INSERT INTO `auth_permission` VALUES (46, 'Can change answer', 12, 'change_answer');
+INSERT INTO `auth_permission` VALUES (47, 'Can delete answer', 12, 'delete_answer');
+INSERT INTO `auth_permission` VALUES (48, 'Can view answer', 12, 'view_answer');
 
 -- ----------------------------
 -- Table structure for auth_user
@@ -363,7 +379,7 @@ CREATE TABLE `auth_user`  (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth_user
@@ -382,7 +398,7 @@ CREATE TABLE `auth_user_groups`  (
   INDEX `auth_user_groups_group_id_97559544_fk_auth_group_id`(`group_id`) USING BTREE,
   CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth_user_groups
@@ -401,11 +417,132 @@ CREATE TABLE `auth_user_user_permissions`  (
   INDEX `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm`(`permission_id`) USING BTREE,
   CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth_user_user_permissions
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for crop_env
+-- ----------------------------
+DROP TABLE IF EXISTS `crop_env`;
+CREATE TABLE `crop_env`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `N` int NULL DEFAULT NULL,
+  `P` int NULL DEFAULT NULL,
+  `K` int NULL DEFAULT NULL,
+  `temperature` float NULL DEFAULT NULL,
+  `humidity` float NULL DEFAULT NULL,
+  `ph` float NULL DEFAULT NULL,
+  `rainfall` float NULL DEFAULT NULL,
+  `label` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of crop_env
+-- ----------------------------
+INSERT INTO `crop_env` VALUES (1, 90, 42, 43, 20.8797, 82.0027, 6.50299, 202.936, 'strawberry');
+INSERT INTO `crop_env` VALUES (2, 85, 58, 41, 21.7705, 80.3196, 7.0381, 226.656, 'strawberry');
+INSERT INTO `crop_env` VALUES (3, 60, 55, 44, 23.0045, 82.3208, 7.84021, 263.964, 'strawberry');
+INSERT INTO `crop_env` VALUES (4, 74, 35, 40, 26.4911, 80.1584, 6.9804, 242.864, 'strawberry');
+INSERT INTO `crop_env` VALUES (5, 78, 42, 42, 20.1302, 81.6049, 7.62847, 262.717, 'strawberry');
+INSERT INTO `crop_env` VALUES (6, 69, 37, 42, 23.058, 83.3701, 7.07345, 251.055, 'strawberry');
+INSERT INTO `crop_env` VALUES (7, 69, 55, 38, 22.7088, 82.6394, 5.70081, 271.325, 'strawberry');
+INSERT INTO `crop_env` VALUES (8, 94, 53, 40, 20.2777, 82.8941, 5.71863, 241.974, 'strawberry');
+INSERT INTO `crop_env` VALUES (9, 89, 54, 38, 24.5159, 83.5352, 6.68535, 230.446, 'strawberry');
+INSERT INTO `crop_env` VALUES (10, 68, 58, 38, 23.224, 83.0332, 6.33625, 221.209, 'strawberry');
+INSERT INTO `crop_env` VALUES (11, 91, 53, 40, 26.5272, 81.4175, 5.38617, 264.615, 'strawberry');
+INSERT INTO `crop_env` VALUES (12, 90, 46, 42, 23.979, 81.4506, 7.50283, 250.083, 'strawberry');
+INSERT INTO `crop_env` VALUES (13, 78, 58, 44, 26.8008, 80.8868, 5.10868, 284.436, 'strawberry');
+INSERT INTO `crop_env` VALUES (14, 93, 56, 36, 24.015, 82.0569, 6.98435, 185.277, 'strawberry');
+INSERT INTO `crop_env` VALUES (15, 94, 50, 37, 25.6659, 80.6638, 6.94802, 209.587, 'strawberry');
+INSERT INTO `crop_env` VALUES (16, 60, 48, 39, 24.2821, 80.3003, 7.0423, 231.086, 'strawberry');
+INSERT INTO `crop_env` VALUES (17, 85, 38, 41, 21.5871, 82.7884, 6.24905, 276.655, 'strawberry');
+INSERT INTO `crop_env` VALUES (18, 91, 35, 39, 23.7939, 80.4182, 6.97086, 206.261, 'strawberry');
+INSERT INTO `crop_env` VALUES (19, 77, 38, 36, 21.8653, 80.1923, 5.95393, 224.555, 'strawberry');
+INSERT INTO `crop_env` VALUES (20, 88, 35, 40, 23.5794, 83.5876, 5.85393, 291.299, 'strawberry');
+INSERT INTO `crop_env` VALUES (21, 89, 45, 36, 21.325, 80.4748, 6.44248, 185.497, 'strawberry');
+INSERT INTO `crop_env` VALUES (22, 76, 40, 43, 25.1575, 83.1171, 5.07018, 231.384, 'strawberry');
+INSERT INTO `crop_env` VALUES (23, 67, 59, 41, 21.9477, 80.9738, 6.01263, 213.356, 'strawberry');
+INSERT INTO `crop_env` VALUES (24, 83, 41, 43, 21.0525, 82.6784, 6.25403, 233.108, 'strawberry');
+INSERT INTO `crop_env` VALUES (25, 98, 47, 37, 23.4838, 81.3326, 7.37548, 224.058, 'strawberry');
+INSERT INTO `crop_env` VALUES (26, 66, 53, 41, 25.0756, 80.5239, 7.77891, 257.004, 'strawberry');
+INSERT INTO `crop_env` VALUES (27, 97, 59, 43, 26.3593, 84.044, 6.2865, 271.359, 'strawberry');
+INSERT INTO `crop_env` VALUES (28, 97, 50, 41, 24.5292, 80.545, 7.07096, 260.263, 'strawberry');
+INSERT INTO `crop_env` VALUES (29, 60, 49, 44, 20.7758, 84.4977, 6.24484, 240.081, 'strawberry');
+INSERT INTO `crop_env` VALUES (30, 84, 51, 35, 22.3016, 80.6442, 6.0433, 197.979, 'strawberry');
+INSERT INTO `crop_env` VALUES (31, 73, 57, 41, 21.4465, 84.9438, 5.82471, 272.202, 'strawberry');
+INSERT INTO `crop_env` VALUES (32, 92, 35, 40, 22.1793, 80.3313, 6.35739, 200.088, 'strawberry');
+INSERT INTO `crop_env` VALUES (33, 85, 37, 39, 24.5278, 82.7369, 6.36413, 224.676, 'strawberry');
+INSERT INTO `crop_env` VALUES (34, 98, 53, 38, 20.2671, 81.639, 5.01451, 270.442, 'strawberry');
+INSERT INTO `crop_env` VALUES (35, 88, 54, 44, 25.7354, 83.8827, 6.14941, 233.132, 'strawberry');
+INSERT INTO `crop_env` VALUES (36, 95, 55, 42, 26.7953, 82.1481, 5.95066, 193.347, 'strawberry');
+INSERT INTO `crop_env` VALUES (37, 99, 57, 35, 26.7575, 81.1773, 5.96037, 272.3, 'strawberry');
+INSERT INTO `crop_env` VALUES (38, 95, 39, 36, 23.8633, 83.1525, 5.5614, 285.249, 'strawberry');
+INSERT INTO `crop_env` VALUES (39, 60, 43, 44, 21.0194, 82.9522, 7.41624, 298.402, 'strawberry');
+INSERT INTO `crop_env` VALUES (40, 63, 44, 41, 24.173, 83.7288, 5.58337, 257.034, 'strawberry');
+INSERT INTO `crop_env` VALUES (41, 62, 42, 36, 22.7813, 82.0672, 6.43001, 248.718, 'strawberry');
+INSERT INTO `crop_env` VALUES (42, 64, 45, 43, 25.6298, 83.5284, 5.53488, 209.9, 'strawberry');
+INSERT INTO `crop_env` VALUES (43, 83, 60, 36, 25.597, 80.1451, 6.90399, 200.835, 'strawberry');
+INSERT INTO `crop_env` VALUES (44, 82, 40, 40, 23.8307, 84.8136, 6.27148, 298.56, 'strawberry');
+INSERT INTO `crop_env` VALUES (45, 85, 52, 45, 26.3136, 82.367, 7.22429, 265.536, 'strawberry');
+INSERT INTO `crop_env` VALUES (46, 91, 35, 38, 24.8973, 80.5259, 6.13429, 183.679, 'strawberry');
+INSERT INTO `crop_env` VALUES (47, 76, 49, 42, 24.9588, 84.4796, 5.20637, 196.956, 'strawberry');
+INSERT INTO `crop_env` VALUES (48, 74, 39, 38, 23.2411, 84.592, 7.78205, 233.045, 'strawberry');
+INSERT INTO `crop_env` VALUES (49, 79, 43, 39, 21.6663, 80.7096, 7.06278, 210.814, 'strawberry');
+INSERT INTO `crop_env` VALUES (50, 88, 55, 45, 24.6354, 80.4136, 7.73037, 253.72, 'strawberry');
+INSERT INTO `crop_env` VALUES (51, 60, 36, 43, 23.4312, 83.0631, 5.2862, 219.905, 'strawberry');
+INSERT INTO `crop_env` VALUES (52, 76, 60, 39, 20.0454, 80.3478, 6.76624, 208.581, 'strawberry');
+INSERT INTO `crop_env` VALUES (53, 93, 56, 42, 23.8572, 82.2257, 7.38276, 195.095, 'strawberry');
+INSERT INTO `crop_env` VALUES (54, 65, 60, 43, 21.972, 81.8992, 5.65817, 227.364, 'strawberry');
+INSERT INTO `crop_env` VALUES (55, 95, 52, 36, 26.2292, 83.8363, 5.54336, 286.508, 'strawberry');
+INSERT INTO `crop_env` VALUES (56, 75, 38, 39, 23.4468, 84.7935, 6.21511, 283.934, 'strawberry');
+INSERT INTO `crop_env` VALUES (57, 74, 54, 38, 25.6555, 83.4702, 7.12027, 217.379, 'strawberry');
+INSERT INTO `crop_env` VALUES (58, 91, 36, 45, 24.4435, 82.4543, 5.95065, 267.976, 'strawberry');
+INSERT INTO `crop_env` VALUES (59, 71, 46, 40, 20.2802, 82.1235, 7.23671, 191.954, 'strawberry');
+INSERT INTO `crop_env` VALUES (60, 99, 55, 35, 21.7238, 80.239, 6.5017, 277.963, 'strawberry');
+INSERT INTO `crop_env` VALUES (61, 72, 40, 38, 20.4145, 82.208, 7.59249, 245.151, 'strawberry');
+INSERT INTO `crop_env` VALUES (62, 83, 58, 45, 25.7553, 83.5183, 5.87535, 245.663, 'strawberry');
+INSERT INTO `crop_env` VALUES (63, 93, 58, 38, 20.6152, 83.7735, 6.9324, 279.545, 'strawberry');
+INSERT INTO `crop_env` VALUES (64, 70, 36, 42, 21.8411, 80.7289, 6.94621, 202.384, 'strawberry');
+INSERT INTO `crop_env` VALUES (65, 76, 47, 42, 20.0837, 83.2911, 5.73917, 263.637, 'strawberry');
+INSERT INTO `crop_env` VALUES (66, 99, 41, 36, 24.458, 82.7484, 6.73865, 182.562, 'strawberry');
+INSERT INTO `crop_env` VALUES (67, 99, 54, 37, 21.1435, 80.335, 5.59482, 198.673, 'strawberry');
+INSERT INTO `crop_env` VALUES (68, 86, 59, 35, 25.7872, 82.1112, 6.94664, 243.512, 'strawberry');
+INSERT INTO `crop_env` VALUES (69, 69, 46, 41, 23.6412, 80.286, 5.01214, 263.11, 'strawberry');
+INSERT INTO `crop_env` VALUES (70, 91, 56, 37, 23.4319, 80.5689, 6.36347, 269.504, 'strawberry');
+INSERT INTO `crop_env` VALUES (71, 61, 52, 41, 24.9767, 83.8918, 6.88043, 204.8, 'strawberry');
+INSERT INTO `crop_env` VALUES (72, 67, 45, 38, 22.7279, 82.1707, 7.30041, 260.888, 'strawberry');
+INSERT INTO `crop_env` VALUES (73, 79, 42, 37, 24.873, 82.8402, 6.58792, 295.609, 'strawberry');
+INSERT INTO `crop_env` VALUES (74, 78, 43, 42, 21.3238, 83.0032, 7.28374, 192.32, 'strawberry');
+INSERT INTO `crop_env` VALUES (75, 75, 54, 36, 26.2947, 84.5692, 7.02394, 257.491, 'strawberry');
+INSERT INTO `crop_env` VALUES (76, 97, 36, 45, 22.2287, 81.8587, 6.93908, 278.079, 'strawberry');
+INSERT INTO `crop_env` VALUES (77, 67, 47, 44, 26.7307, 81.786, 7.86847, 280.404, 'strawberry');
+INSERT INTO `crop_env` VALUES (78, 73, 35, 38, 24.8892, 81.9793, 5.00531, 185.946, 'strawberry');
+INSERT INTO `crop_env` VALUES (79, 77, 36, 37, 26.8844, 81.4603, 6.13613, 194.577, 'strawberry');
+INSERT INTO `crop_env` VALUES (80, 81, 41, 38, 22.6785, 83.7287, 7.52408, 200.913, 'strawberry');
+INSERT INTO `crop_env` VALUES (81, 68, 57, 43, 26.0887, 80.3798, 5.70694, 182.904, 'strawberry');
+INSERT INTO `crop_env` VALUES (82, 72, 45, 35, 25.4298, 82.9468, 5.75851, 195.357, 'strawberry');
+INSERT INTO `crop_env` VALUES (83, 61, 53, 43, 26.4032, 81.0564, 6.34961, 223.367, 'strawberry');
+INSERT INTO `crop_env` VALUES (84, 67, 43, 39, 26.0437, 84.9691, 5.99997, 186.754, 'strawberry');
+INSERT INTO `crop_env` VALUES (85, 67, 58, 39, 25.2827, 80.5437, 5.45359, 220.116, 'strawberry');
+INSERT INTO `crop_env` VALUES (86, 66, 60, 38, 22.0858, 83.4704, 6.37258, 231.736, 'strawberry');
+INSERT INTO `crop_env` VALUES (87, 82, 43, 38, 23.2862, 81.4332, 5.10559, 242.317, 'strawberry');
+INSERT INTO `crop_env` VALUES (88, 84, 50, 44, 25.4859, 81.4063, 5.93534, 182.655, 'strawberry');
+INSERT INTO `crop_env` VALUES (89, 81, 53, 42, 23.6758, 81.0357, 5.17782, 233.703, 'strawberry');
+INSERT INTO `crop_env` VALUES (90, 91, 50, 40, 20.8248, 84.1342, 6.46239, 230.224, 'strawberry');
+INSERT INTO `crop_env` VALUES (91, 93, 53, 38, 26.93, 81.9141, 7.06917, 290.679, 'strawberry');
+INSERT INTO `crop_env` VALUES (92, 90, 44, 38, 23.8351, 83.8839, 7.47313, 241.201, 'strawberry');
+INSERT INTO `crop_env` VALUES (93, 81, 45, 35, 26.5287, 80.1227, 6.15838, 218.916, 'strawberry');
+INSERT INTO `crop_env` VALUES (94, 78, 40, 38, 26.4643, 83.8564, 7.54987, 248.226, 'strawberry');
+INSERT INTO `crop_env` VALUES (95, 60, 51, 36, 22.6966, 82.8109, 6.02832, 256.996, 'strawberry');
+INSERT INTO `crop_env` VALUES (96, 88, 46, 42, 22.6832, 83.4636, 6.60499, 194.265, 'strawberry');
+INSERT INTO `crop_env` VALUES (97, 93, 47, 37, 21.5335, 82.14, 6.50034, 295.925, 'strawberry');
+INSERT INTO `crop_env` VALUES (98, 60, 55, 45, 21.4087, 83.3293, 5.93575, 287.577, 'strawberry');
+INSERT INTO `crop_env` VALUES (99, 78, 35, 44, 26.5435, 84.6735, 7.07266, 183.622, 'strawberry');
+INSERT INTO `crop_env` VALUES (100, 65, 37, 40, 23.3591, 83.5951, 5.33332, 188.414, 'strawberry');
 
 -- ----------------------------
 -- Table structure for diseasespests
@@ -474,7 +611,7 @@ CREATE TABLE `django_admin_log`  (
   INDEX `django_admin_log_user_id_c564eba6_fk_auth_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of django_admin_log
@@ -490,7 +627,7 @@ CREATE TABLE `django_content_type`  (
   `model` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `django_content_type_app_label_model_76bd3d3b_uniq`(`app_label`, `model`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of django_content_type
@@ -500,7 +637,11 @@ INSERT INTO `django_content_type` VALUES (3, 'auth', 'group');
 INSERT INTO `django_content_type` VALUES (2, 'auth', 'permission');
 INSERT INTO `django_content_type` VALUES (4, 'auth', 'user');
 INSERT INTO `django_content_type` VALUES (5, 'contenttypes', 'contenttype');
+INSERT INTO `django_content_type` VALUES (9, 'HelloWorld', 'admin');
+INSERT INTO `django_content_type` VALUES (12, 'HelloWorld', 'answer');
+INSERT INTO `django_content_type` VALUES (10, 'HelloWorld', 'diseasespests');
 INSERT INTO `django_content_type` VALUES (8, 'HelloWorld', 'img');
+INSERT INTO `django_content_type` VALUES (11, 'HelloWorld', 'question');
 INSERT INTO `django_content_type` VALUES (7, 'HelloWorld', 'userinfo');
 INSERT INTO `django_content_type` VALUES (6, 'sessions', 'session');
 
@@ -514,12 +655,11 @@ CREATE TABLE `django_migrations`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of django_migrations
 -- ----------------------------
-INSERT INTO `django_migrations` VALUES (1, 'HelloWorld', '0001_initial', '2023-04-28 07:29:20.218394');
 INSERT INTO `django_migrations` VALUES (2, 'contenttypes', '0001_initial', '2023-04-28 07:29:20.258411');
 INSERT INTO `django_migrations` VALUES (3, 'auth', '0001_initial', '2023-04-28 07:29:20.710297');
 INSERT INTO `django_migrations` VALUES (4, 'admin', '0001_initial', '2023-04-28 07:29:20.817658');
@@ -538,7 +678,6 @@ INSERT INTO `django_migrations` VALUES (16, 'auth', '0010_alter_group_name_max_l
 INSERT INTO `django_migrations` VALUES (17, 'auth', '0011_update_proxy_permissions', '2023-04-28 07:29:21.237339');
 INSERT INTO `django_migrations` VALUES (18, 'auth', '0012_alter_user_first_name_max_length', '2023-04-28 07:29:21.286138');
 INSERT INTO `django_migrations` VALUES (19, 'sessions', '0001_initial', '2023-04-28 07:29:21.314442');
-INSERT INTO `django_migrations` VALUES (20, 'HelloWorld', '0002_img', '2023-04-28 09:15:22.155667');
 
 -- ----------------------------
 -- Table structure for django_session
@@ -555,6 +694,30 @@ CREATE TABLE `django_session`  (
 -- ----------------------------
 -- Records of django_session
 -- ----------------------------
+INSERT INTO `django_session` VALUES ('baycl85c0ukjmx4amuh42foh4zli7fn8', 'eyJpbmZvIjp7InVzZXJuYW1lIjoieW1qIiwicGFzc3dvcmQiOiIxMjM0NTYifX0:1pz86Y:ST7fmCVUBREwjo5godyB1zhGasgMoeo9BriVGoV0SPE', '2023-05-31 03:45:34.142124');
+INSERT INTO `django_session` VALUES ('e5zeh59zt6scbi3xgwld8boiw6qvbt7x', 'eyJpbmZvIjp7InVzZXJuYW1lIjoieW1qIiwicGFzc3dvcmQiOiIxMjM0NTYifX0:1pwHM9:lHLtcgco2xB1AomBVtMzNVu6qyCf97y_6HQCVBSERJY', '2023-05-23 07:01:53.778567');
+INSERT INTO `django_session` VALUES ('hugwa1i8q4dpn00ve8g4cg5w935j4a25', 'eyJpbmZvIjp7InVzZXJuYW1lIjoieW1qIiwicGFzc3dvcmQiOiIxMjM0NTYifX0:1q74np:-buC0MVAhYk5-gt_TmrEvkseNkYh8A4mPpDetINF7CI', '2023-06-22 01:51:05.508950');
+INSERT INTO `django_session` VALUES ('msh1p0u2bzvo771ahtl7eosgvcw1n4ja', 'eyJpbmZvIjp7InVzZXJuYW1lIjoieW1qIiwicGFzc3dvcmQiOiIxMjM0NTYifX0:1pwCTN:HOJJqrsnzw770NOO8CAubE0xWl-0Fuz9W01nreo-LHA', '2023-05-09 02:49:01.627970');
+INSERT INTO `django_session` VALUES ('p67e0r610q54yw7zugymob1865ymr7om', 'eyJpbmZvIjp7InVzZXJuYW1lIjoieW1qIiwicGFzc3dvcmQiOiIxMjM0NTYifX0:1pvwxB:2roaDP11id66a2R8g-xSw2sZIpt2mznfTA_tZsfyRUE', '2023-05-08 10:14:45.271059');
+INSERT INTO `django_session` VALUES ('sauyvkvpuy1bm13gesjengetsyasoejn', 'eyJpbmZvIjp7InVzZXJuYW1lIjoieW1qIiwicGFzc3dvcmQiOiIxMjM0NTYifX0:1pwHOA:ELnkvjN57_j_Vq_VPxP76QAu5VSox64RGL8jYtK1_UY', '2023-05-23 07:03:58.383418');
+
+-- ----------------------------
+-- Table structure for helloworld_admin
+-- ----------------------------
+DROP TABLE IF EXISTS `helloworld_admin`;
+CREATE TABLE `helloworld_admin`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `username` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `password` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of helloworld_admin
+-- ----------------------------
+INSERT INTO `helloworld_admin` VALUES (1, 'ymj', '123456');
+INSERT INTO `helloworld_admin` VALUES (2, 'ymj', '123456');
+INSERT INTO `helloworld_admin` VALUES (3, 'ymj', '123456');
 
 -- ----------------------------
 -- Table structure for helloworld_img
@@ -565,7 +728,7 @@ CREATE TABLE `helloworld_img`  (
   `img` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of helloworld_img
@@ -589,7 +752,7 @@ CREATE TABLE `helloworld_userinfo`  (
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of helloworld_userinfo
@@ -608,5 +771,64 @@ CREATE TABLE `prices`  (
 -- ----------------------------
 -- Records of prices
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for solove_dis
+-- ----------------------------
+DROP TABLE IF EXISTS `solove_dis`;
+CREATE TABLE `solove_dis`  (
+  `key` int NOT NULL,
+  `result` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of solove_dis
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for strawberry_data
+-- ----------------------------
+DROP TABLE IF EXISTS `strawberry_data`;
+CREATE TABLE `strawberry_data`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `province` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `crop` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `price` float NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of strawberry_data
+-- ----------------------------
+INSERT INTO `strawberry_data` VALUES (1, '北京市', '草莓', 10.8);
+INSERT INTO `strawberry_data` VALUES (2, '天津市', '草莓', 8.2);
+INSERT INTO `strawberry_data` VALUES (3, '河北省', '草莓', 23.5);
+INSERT INTO `strawberry_data` VALUES (4, '山西省', '草莓', 15.6);
+INSERT INTO `strawberry_data` VALUES (5, '辽宁省', '草莓', 18.7);
+INSERT INTO `strawberry_data` VALUES (6, '吉林省', '草莓', 12.9);
+INSERT INTO `strawberry_data` VALUES (7, '黑龙江省', '草莓', 14.3);
+INSERT INTO `strawberry_data` VALUES (8, '上海市', '草莓', 9.6);
+INSERT INTO `strawberry_data` VALUES (9, '江苏省', '草莓', 32.1);
+INSERT INTO `strawberry_data` VALUES (10, '浙江省', '草莓', 29.7);
+INSERT INTO `strawberry_data` VALUES (11, '安徽省', '草莓', 19.3);
+INSERT INTO `strawberry_data` VALUES (12, '福建省', '草莓', 26.8);
+INSERT INTO `strawberry_data` VALUES (13, '江西省', '草莓', 17.2);
+INSERT INTO `strawberry_data` VALUES (14, '山东省', '草莓', 36.4);
+INSERT INTO `strawberry_data` VALUES (15, '河南省', '草莓', 27.8);
+INSERT INTO `strawberry_data` VALUES (16, '湖北省', '草莓', 15.9);
+INSERT INTO `strawberry_data` VALUES (17, '湖南省', '草莓', 21.7);
+INSERT INTO `strawberry_data` VALUES (18, '广东省', '草莓', 30.6);
+INSERT INTO `strawberry_data` VALUES (19, '广西壮族自治区', '草莓', 12.4);
+INSERT INTO `strawberry_data` VALUES (20, '海南省', '草莓', 4.5);
+INSERT INTO `strawberry_data` VALUES (21, '重庆市', '草莓', 8.1);
+INSERT INTO `strawberry_data` VALUES (22, '四川省', '草莓', 14.8);
+INSERT INTO `strawberry_data` VALUES (23, '贵州省', '草莓', 9.7);
+INSERT INTO `strawberry_data` VALUES (24, '云南省', '草莓', 13.6);
+INSERT INTO `strawberry_data` VALUES (25, '西藏自治区', '草莓', 0.2);
+INSERT INTO `strawberry_data` VALUES (26, '陕西省', '草莓', 12.1);
+INSERT INTO `strawberry_data` VALUES (27, '甘肃省', '草莓', 17);
+INSERT INTO `strawberry_data` VALUES (28, '青海省', '草莓', 18);
+INSERT INTO `strawberry_data` VALUES (29, '宁夏回族自治区', '草莓', 27);
+INSERT INTO `strawberry_data` VALUES (30, '新疆维吾尔自治区', '草莓', 35);
 
 SET FOREIGN_KEY_CHECKS = 1;

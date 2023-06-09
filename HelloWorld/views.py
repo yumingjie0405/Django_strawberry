@@ -173,7 +173,6 @@ def result(request):
 5、将图表渲染到 HTML 模板中
 '''
 
-
 # 经济预测
 def show_data(request):
     DAYS_FOR_TRAIN = 10
