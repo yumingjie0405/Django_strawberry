@@ -92,15 +92,17 @@ ultralytics、Django、pymysql、openai...
 
 ![tree](doc/img_4.png)
 
-### 使用websockets在django上实现chatgpt实时的问答机器人
 
 ### **6、全国均价展示**
 
+
 ![chain_price](doc/img_5.png)
 
+
+### 使用websockets在django上实现chatgpt实时的问答机器人
+
 1. 安装并配置Channels库：Channels是一个能够让Django支持异步处理请求的库，可以用于实现WebSocket通信和异步任务等功能。需要先安装Channels库，并在settings.py中进行相关配置。
-2.
-创建WebSocket消费者类：创建一个继承自AsyncWebsocketConsumer的类，并实现connect、disconnect和receive等方法。其中，connect方法会在客户端建立WebSocket连接时调用，disconnect方法会在客户端断开WebSocket连接时调用，receive方法会在接收到客户端发送的消息时调用。
+2. 创建WebSocket消费者类：创建一个继承自AsyncWebsocketConsumer的类，并实现connect、disconnect和receive等方法。其中，connect方法会在客户端建立WebSocket连接时调用，disconnect方法会在客户端断开WebSocket连接时调用，receive方法会在接收到客户端发送的消息时调用。
 3. 集成ChatGPT模型：将ChatGPT模型集成到WebSocket消费者类中，当接收到客户端的消息时，调用ChatGPT模型进行问答处理，并将结果返回给客户端。
 4. 前端页面实现：创建前端页面，用于用户输入问题并接收服务器返回的回答。在前端页面中使用JavaScript编写代码，与后端进行WebSocket通信，并实现将用户输入的内容发送到服务器，接收服务器返回的回答并展示在页面上。
 
