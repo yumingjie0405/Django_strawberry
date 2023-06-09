@@ -127,8 +127,8 @@ class ChatView(TemplateView):
         context['websocket_url'] = "ws://" + self.request.get_host() + "/ws/chat/"
         return context
 
-
-openai.api_key = "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"
+# TODO 添加openai的key
+openai.api_key = "your_openai_key"
 
 
 @csrf_exempt
@@ -172,6 +172,7 @@ def result(request):
 4、设置图表的全局选项，包括标题、X 轴和 Y 轴标签、提示框等。
 5、将图表渲染到 HTML 模板中
 '''
+
 
 # 经济预测
 def show_data(request):
@@ -236,8 +237,8 @@ def QA(request):
 #     return render(request, 'table.html')
 
 
-# 天气预报
-WEATHER_API_KEY = 'SPBVDFMMKeLXB2VYa'
+# 天气预报 丢弃
+WEATHER_API_KEY = 'your_weather_key'
 
 # def get_weather_data(city):
 #     url = f'https://api.seniverse.com/v3/weather/daily.json?key={WEATHER_API_KEY}&location={city}&language=zh-Hans&unit=c&start=0&days=14'
@@ -285,7 +286,8 @@ def weather(request):
     # 获取城市名称
 
     # 调用和风天气API获取数据
-    url = 'https://api.qweather.com/v7/weather/30d?location=118.63,31.13&key=f2d15caf06324b04b8d78388b0f5754f'
+    # TODO 添加自己的key
+    url = 'https://api.qweather.com/v7/weather/30d?location=118.63,31.13&key=your_key'
     response = requests.get(url)
     data = json.loads(response.content.decode())
     print(data)
@@ -655,7 +657,9 @@ def create_dataset(data, days_for_train=5) -> (np.array, np.array):
         dataset_x.append(_x)
         dataset_y.append(data[i + days_for_train])
     return (np.array(dataset_x), np.array(dataset_y))
-#流式图像
+
+
+# 流式图像
 def index(request):
     return render(request, 'index.html')
 
