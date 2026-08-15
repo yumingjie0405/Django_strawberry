@@ -5,7 +5,6 @@
 欢迎:star:🥰
 
 
-</div>
 
 **环境需求：**
 ultralytics、Django、pymysql、openai...
